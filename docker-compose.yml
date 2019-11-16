@@ -1,0 +1,46 @@
+version: "3"
+services:
+  db:
+    container_name: uisg_db
+    image: mysql
+    restart: always
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_DATABASE: uisg
+      MYSQL_USER: uisg
+      MYSQL_PASSWORD: uisg
+      MYSQL_ROOT_PASSWORD: uisg
+    volumes:
+      - ./db:/var/lib/mysql
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: uisg_api
+    image: uisg_api
+    environment:
+      - DATABASE_HOST=db
+      - DATABASE_PORT=3306
+      - DATABASE_NAME=uisg
+      - DATABASE_USERNAME=uisg
+      - DATABASE_PASSWORD=uisg
+    ports:
+      - 7000:3000
+    volumes:
+      - ./api:/api
+    depends_on:
+      - db
+  web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    container_name: uisg_web
+    image: uisg_web
+    environment:
+      - REACT_APP_API_URL=http://localhost:7000
+      - REACT_APP_DEV=true
+      - NODE_ENV=development
+    ports:
+      - 3000:3000
+    volumes:
+      - ./web:/web
