@@ -3,7 +3,7 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 
-import TopBar from "./TopBar";
+import TopBar from "../components/TopBar";
 import Calendar from "./Calendar";
 import "./App.scss";
 
