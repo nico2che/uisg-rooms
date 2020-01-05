@@ -18,13 +18,14 @@ class CalendarComponent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      openCreateEvent: false
+      openCreateEvent: false,
+      selectedDates: {}
     };
   }
 
-  handleSelect = ({ start, end }) => {
+  handleSelect = selectedDates => {
     // TODO: save schedules
-    this.setState({ openCreateEvent: true });
+    this.setState({ openCreateEvent: true, selectedDates });
   };
 
   createEvent = () => {
@@ -51,6 +52,7 @@ class CalendarComponent extends React.Component {
         <DialoagCreateEvent
           isOpen={this.state.openCreateEvent}
           onClose={this.closeDialog}
+          selectedDates={this.state.selectedDates}
         />
       </div>
     );

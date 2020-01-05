@@ -1,15 +1,20 @@
 import React from "react";
 import { Formik, Form, ErrorMessage } from "formik";
 
+import MomentUtils from "@date-io/moment";
+import {
+  KeyboardDatePicker,
+  MuiPickersUtilsProvider
+} from "@material-ui/pickers";
+import "date-fns";
+import DateFnsUtils from "@date-io/date-fns";
+
 import firebase from "../firebase";
 
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
-import Container from "@material-ui/core/Container";
 import TextField from "@material-ui/core/TextField";
-import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
@@ -38,7 +43,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-function DialogCreateEvent({ isOpen, onClose }) {
+function DialogCreateEvent({ isOpen, onClose, selectedDates }) {
   const classes = useStyles();
 
   const createEvent = async event => {
@@ -49,6 +54,8 @@ function DialogCreateEvent({ isOpen, onClose }) {
     onClose();
   };
 
+  const { start, end } = selectedDates;
+
   return (
     <Dialog
       fullScreen
@@ -57,7 +64,11 @@ function DialogCreateEvent({ isOpen, onClose }) {
       TransitionComponent={Transition}
     >
       <Formik
-        initialValues={{ name: "" }}
+        initialValues={{
+          name: "",
+          startDate: new Date(start),
+          endDate: new Date(end)
+        }}
         validate={values => {
           const errors = {};
           if (!values.name) {
@@ -101,6 +112,34 @@ function DialogCreateEvent({ isOpen, onClose }) {
                     fullWidth
                   />
                   <ErrorMessage name="name" component="div" />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    required
+                    type="date"
+                    id="startDate"
+                    name="startDate"
+                    label="Start date"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.startDate}
+                    fullWidth
+                  />
+                  <ErrorMessage name="startDate" component="div" />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    required
+                    type="date"
+                    id="endDate"
+                    name="endDate"
+                    label="End date"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.endDate}
+                    fullWidth
+                  />
+                  <ErrorMessage name="endDate" component="div" />
                 </Grid>
               </Grid>
             </Form>
