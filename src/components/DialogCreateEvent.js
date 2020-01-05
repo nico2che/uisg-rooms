@@ -1,11 +1,15 @@
 import React from "react";
+import { Formik, Form, ErrorMessage } from "formik";
+
+import firebase from "../firebase";
 
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
-import ListItemText from "@material-ui/core/ListItemText";
-import ListItem from "@material-ui/core/ListItem";
-import List from "@material-ui/core/List";
-import Divider from "@material-ui/core/Divider";
+import Container from "@material-ui/core/Container";
+import TextField from "@material-ui/core/TextField";
+import Box from "@material-ui/core/Box";
+import Grid from "@material-ui/core/Grid";
+import Paper from "@material-ui/core/Paper";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
@@ -22,6 +26,11 @@ const useStyles = makeStyles(theme => ({
   title: {
     marginLeft: theme.spacing(2),
     flex: 1
+  },
+  form: {
+    margin: theme.spacing(3),
+    textAlign: "center",
+    color: theme.palette.text.secondary
   }
 }));
 
@@ -31,6 +40,15 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 function DialogCreateEvent({ isOpen, onClose }) {
   const classes = useStyles();
+
+  const createEvent = async event => {
+    await firebase
+      .firestore()
+      .collection("events")
+      .add(event);
+    onClose();
+  };
+
   return (
     <Dialog
       fullScreen
@@ -38,36 +56,57 @@ function DialogCreateEvent({ isOpen, onClose }) {
       onClose={onClose}
       TransitionComponent={Transition}
     >
-      <AppBar className={classes.appBar}>
-        <Toolbar>
-          <IconButton
-            edge="start"
-            color="inherit"
-            onClick={onClose}
-            aria-label="close"
-          >
-            <CloseIcon />
-          </IconButton>
-          <Typography variant="h6" className={classes.title}>
-            Créer un évènement
-          </Typography>
-          <Button autoFocus color="inherit" onClick={onClose}>
-            Sauvegarder
-          </Button>
-        </Toolbar>
-      </AppBar>
-      <List>
-        <ListItem button>
-          <ListItemText primary="Phone ringtone" secondary="Titania" />
-        </ListItem>
-        <Divider />
-        <ListItem button>
-          <ListItemText
-            primary="Default notification ringtone"
-            secondary="Tethys"
-          />
-        </ListItem>
-      </List>
+      <Formik
+        initialValues={{ name: "" }}
+        validate={values => {
+          const errors = {};
+          if (!values.name) {
+            errors.name = "Name is required";
+          }
+          return errors;
+        }}
+        onSubmit={createEvent}
+      >
+        {({ values, handleChange, handleSubmit, handleBlur, isSubmitting }) => (
+          <>
+            <AppBar className={classes.appBar}>
+              <Toolbar>
+                <IconButton
+                  edge="start"
+                  color="inherit"
+                  onClick={onClose}
+                  aria-label="close"
+                >
+                  <CloseIcon />
+                </IconButton>
+                <Typography variant="h6" className={classes.title}>
+                  Create an event
+                </Typography>
+                <Button autoFocus color="inherit" onClick={handleSubmit}>
+                  Create
+                </Button>
+              </Toolbar>
+            </AppBar>
+            <Form className={classes.form}>
+              <Grid container spacing={3}>
+                <Grid item xs={12}>
+                  <TextField
+                    required
+                    id="name"
+                    name="name"
+                    label="Event name"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.email}
+                    fullWidth
+                  />
+                  <ErrorMessage name="name" component="div" />
+                </Grid>
+              </Grid>
+            </Form>
+          </>
+        )}
+      </Formik>
     </Dialog>
   );
 }
