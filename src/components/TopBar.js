@@ -1,28 +1,44 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
+import { useHistory, NavLink } from "react-router-dom";
 
 import firebase from "../firebase";
 
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
-import Button from "@material-ui/core/Button";
+import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
+import Settings from "@material-ui/icons/Settings";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import DialogLogin from "./DialogLogin";
 
 const useStyles = makeStyles(theme => ({
   title: {
     flexGrow: 1
+  },
+  homeLink: {
+    textDecoration: "none",
+    color: "white"
   }
 }));
 
 function Logged({ user }) {
+  const history = useHistory();
   return (
     <div>
+      <IconButton
+        aria-label="account of current user"
+        aria-controls="menu-appbar"
+        aria-haspopup="true"
+        onClick={() => history.push("/settings")}
+        color="inherit"
+      >
+        <Settings />
+      </IconButton>
       {user.email}
-      <Button onClick={() => firebase.auth().signOut()}>
-        <ExitToAppIcon style={{ color: "white" }} />
-      </Button>
+      <IconButton onClick={() => firebase.auth().signOut()} color="inherit">
+        <ExitToAppIcon />
+      </IconButton>
     </div>
   );
 }
@@ -35,7 +51,9 @@ function TopBar() {
     <AppBar position="static">
       <Toolbar>
         <Typography variant="h6" className={classes.title}>
-          UISG Rooms
+          <NavLink to="/" className={classes.homeLink}>
+            UISG Rooms
+          </NavLink>
         </Typography>
         {user ? <Logged user={user} /> : <DialogLogin />}
       </Toolbar>
