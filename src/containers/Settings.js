@@ -1,5 +1,9 @@
 import React from "react";
 
+import Grid from "@material-ui/core/Grid";
+import GeneralSettings from "./Settings/GeneralSettings";
+import CustomFieldsSettings from "./Settings/CustomFieldsSettings";
+
 import { makeStyles } from "@material-ui/core/styles";
 
 import TopBar from "../components/TopBar";
@@ -10,11 +14,18 @@ const useStyles = makeStyles(theme => ({
   content: {
     flexGrow: 1,
     height: "100vh",
+    margin: theme.spacing(3),
     overflow: "auto"
   },
-  container: {
-    paddingTop: theme.spacing(4),
-    paddingBottom: theme.spacing(4)
+  card: {
+    backgroundColor: "white"
+  },
+  form: {
+    textAlign: "center",
+    color: theme.palette.text.secondary
+  },
+  saveButton: {
+    marginLeft: "auto"
   }
 }));
 
@@ -23,7 +34,16 @@ function Settings() {
   return (
     <div>
       <TopBar />
-      <main className={classes.content}>Settings page</main>
+      <main className={classes.content}>
+        <Grid container spacing={3}>
+          <Grid item xs={6}>
+            <GeneralSettings />
+          </Grid>
+          <Grid item xs={6}>
+            <CustomFieldsSettings />
+          </Grid>
+        </Grid>
+      </main>
     </div>
   );
 }
