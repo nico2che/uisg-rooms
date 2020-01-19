@@ -2,7 +2,7 @@ import React from "react";
 
 import Grid from "@material-ui/core/Grid";
 import GeneralSettings from "./Settings/GeneralSettings";
-import CustomFieldsSettings from "./Settings/CustomFieldsSettings";
+import SpacesSettings from "./Settings/SpacesSettings";
 
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -36,11 +36,11 @@ function Settings() {
       <TopBar />
       <main className={classes.content}>
         <Grid container spacing={3}>
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={6}>
             <GeneralSettings />
           </Grid>
-          <Grid item xs={6}>
-            <CustomFieldsSettings />
+          <Grid item xs={12} sm={6}>
+            <SpacesSettings />
           </Grid>
         </Grid>
       </main>

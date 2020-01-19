@@ -36,14 +36,13 @@ function GeneralSettings() {
   const classes = useStyles();
   const [values, setValues] = useState(null);
 
-  firebase
-    .firestore()
-    .collection("settings")
-    .doc("general")
-    .get()
-    .then(doc => setValues(doc.data()));
-
   if (!values) {
+    firebase
+      .firestore()
+      .collection("settings")
+      .doc("general")
+      .get()
+      .then(doc => setValues(doc.data()));
     return (
       <div>
         <Skeleton />
