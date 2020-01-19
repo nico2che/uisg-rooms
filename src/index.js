@@ -11,9 +11,11 @@ import { createLogger } from "redux-logger";
 
 import reducers from "./reducers";
 import sagas from "./sagas";
-import Router from "./router";
-import * as serviceWorker from "./serviceWorker";
+
+import App from "./App";
 import "./index.scss";
+
+import * as serviceWorker from "./serviceWorker";
 
 const middlewares = [];
 const sagaMiddleware = createSagaMiddleware();
@@ -44,7 +46,7 @@ const store = createStore(
 ReactDOM.render(
   <Provider store={store}>
     {/* <PersistGate loading={null} persistor={persistor}> */}
-    <Router />
+    <App />
     {/* </PersistGate> */}
   </Provider>,
   document.getElementById("root")
