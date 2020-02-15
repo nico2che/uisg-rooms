@@ -1,13 +1,10 @@
 import React from "react";
 import { Formik, Form, ErrorMessage } from "formik";
 
-import MomentUtils from "@date-io/moment";
 import {
   KeyboardDatePicker,
   MuiPickersUtilsProvider
 } from "@material-ui/pickers";
-import "date-fns";
-import DateFnsUtils from "@date-io/date-fns";
 
 import firebase from "../firebase";
 

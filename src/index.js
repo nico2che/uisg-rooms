@@ -8,6 +8,8 @@ import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import { PersistGate } from "redux-persist/integration/react";
 import { createLogger } from "redux-logger";
+import { MuiPickersUtilsProvider } from "@material-ui/pickers";
+import DateFnsUtils from "@date-io/date-fns";
 
 import reducers from "./reducers";
 import sagas from "./sagas";
@@ -45,9 +47,11 @@ const store = createStore(
 
 ReactDOM.render(
   <Provider store={store}>
-    {/* <PersistGate loading={null} persistor={persistor}> */}
-    <App />
-    {/* </PersistGate> */}
+    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+      {/* <PersistGate loading={null} persistor={persistor}> */}
+      <App />
+      {/* </PersistGate> */}
+    </MuiPickersUtilsProvider>
   </Provider>,
   document.getElementById("root")
 );

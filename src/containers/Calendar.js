@@ -1,9 +1,22 @@
 import React from "react";
 
-import { Calendar, momentLocalizer } from "react-big-calendar";
+import { Calendar, momentLocalizer, Views } from "react-big-calendar";
 import moment from "moment";
 
+import Container from "@material-ui/core/Container";
+
 import DialoagCreateEvent from "../components/DialogCreateEvent";
+import ToolBar from "./Calendar/Toolbar";
+
+import { withStyles } from "@material-ui/core/styles";
+
+const styles = theme => ({
+  container: {
+    backgroundColor: "white",
+    padding: 0,
+    height: "100%"
+  }
+});
 
 const localizer = momentLocalizer(moment);
 const myEventsList = [
@@ -12,6 +25,13 @@ const myEventsList = [
     start: new Date("2019-11-10"),
     end: new Date("2019-11-12")
   }
+];
+
+const resourceMap = [
+  { resourceId: 1, resourceTitle: "Board room" },
+  { resourceId: 2, resourceTitle: "Training room" },
+  { resourceId: 3, resourceTitle: "Meeting room 1" },
+  { resourceId: 4, resourceTitle: "Meeting room 2" }
 ];
 
 class CalendarComponent extends React.Component {
@@ -39,24 +59,27 @@ class CalendarComponent extends React.Component {
 
   render() {
     return (
-      <div>
+      <Container className={this.props.classes.container}>
         <Calendar
           selectable
           localizer={localizer}
           events={myEventsList}
-          startAccessor="start"
-          endAccessor="end"
-          style={{ height: 500 }}
           onSelectSlot={this.handleSelect}
+          defaultView={Views.DAY}
+          views={["day", "month", "week", "work_week", "agenda"]}
+          step={20}
+          defaultDate={new Date()}
+          resources={resourceMap}
+          components={{ toolbar: ToolBar }}
         />
         <DialoagCreateEvent
           isOpen={this.state.openCreateEvent}
           onClose={this.closeDialog}
           selectedDates={this.state.selectedDates}
         />
-      </div>
+      </Container>
     );
   }
 }
 
-export default CalendarComponent;
+export default withStyles(styles)(CalendarComponent);
