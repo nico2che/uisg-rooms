@@ -70,6 +70,8 @@ class CalendarComponent extends React.Component {
           step={20}
           defaultDate={new Date()}
           resources={resourceMap}
+          resourceIdAccessor="resourceId"
+          resourceTitleAccessor="resourceTitle"
           components={{ toolbar: ToolBar }}
         />
         <DialoagCreateEvent

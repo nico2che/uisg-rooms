@@ -14,6 +14,9 @@ import { Toolbar, ButtonGroup } from "@material-ui/core";
 const useStyles = makeStyles(theme => ({
   arrows: {
     marginLeft: theme.spacing(3)
+  },
+  noElevation: {
+    boxShadow: 0
   }
 }));
 
@@ -21,7 +24,7 @@ function ToolBar(props) {
   const { onNavigate, onView, date, localizer, views } = props;
   const classes = useStyles();
   return (
-    <AppBar position="sticky" color="default">
+    <AppBar position="relative" color="white" elevation={0}>
       <Toolbar>
         <ButtonGroup color="primary">
           {views.map(name => (

@@ -13,7 +13,7 @@ import "./App.scss";
 const useStyles = makeStyles(theme => ({
   content: {
     flexGrow: 1,
-    height: "100vh",
+    height: "calc(100vh - 64px)",
     overflow: "auto"
   }
 }));
