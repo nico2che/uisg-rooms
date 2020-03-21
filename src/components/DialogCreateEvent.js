@@ -1,10 +1,6 @@
 import React from "react";
 import { Formik, Form, ErrorMessage } from "formik";
-
-import {
-  KeyboardDatePicker,
-  MuiPickersUtilsProvider
-} from "@material-ui/pickers";
+import { DatePicker } from "@material-ui/pickers";
 
 import firebase from "../firebase";
 
@@ -44,11 +40,21 @@ function DialogCreateEvent({ isOpen, onClose, selectedDates }) {
   const classes = useStyles();
 
   const createEvent = async event => {
-    await firebase
+    const { name, startDate, endDate } = event;
+    const { id } = await firebase
       .firestore()
       .collection("events")
-      .add(event);
-    onClose();
+      .add({
+        name,
+        startDate: startDate.getTime(),
+        endDate: endDate.getTime()
+      });
+    onClose({
+      id,
+      title: name,
+      start: startDate,
+      end: endDate
+    });
   };
 
   const { start, end } = selectedDates;
@@ -57,7 +63,7 @@ function DialogCreateEvent({ isOpen, onClose, selectedDates }) {
     <Dialog
       fullScreen
       open={isOpen}
-      onClose={onClose}
+      onClose={() => onClose()}
       TransitionComponent={Transition}
     >
       <Formik
@@ -82,7 +88,7 @@ function DialogCreateEvent({ isOpen, onClose, selectedDates }) {
                 <IconButton
                   edge="start"
                   color="inherit"
-                  onClick={onClose}
+                  onClick={() => onClose()}
                   aria-label="close"
                 >
                   <CloseIcon />
@@ -111,29 +117,31 @@ function DialogCreateEvent({ isOpen, onClose, selectedDates }) {
                   <ErrorMessage name="name" component="div" />
                 </Grid>
                 <Grid item xs={6}>
-                  <TextField
-                    required
-                    type="date"
+                  <DatePicker
+                    autoOk
                     id="startDate"
                     name="startDate"
-                    label="Start date"
+                    className={classes.arrows}
+                    variant="inline"
+                    disableToolbar
+                    value={values.startDate}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    value={values.startDate}
                     fullWidth
                   />
                   <ErrorMessage name="startDate" component="div" />
                 </Grid>
                 <Grid item xs={6}>
-                  <TextField
-                    required
-                    type="date"
+                  <DatePicker
+                    autoOk
                     id="endDate"
                     name="endDate"
-                    label="End date"
+                    className={classes.arrows}
+                    variant="inline"
+                    disableToolbar
+                    value={values.endDate}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    value={values.endDate}
                     fullWidth
                   />
                   <ErrorMessage name="endDate" component="div" />
