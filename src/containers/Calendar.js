@@ -21,13 +21,6 @@ const styles = theme => ({
 });
 
 const localizer = momentLocalizer(moment);
-const myEventsList = [
-  {
-    title: "Evenement test",
-    start: new Date("2019-11-10"),
-    end: new Date("2019-11-12")
-  }
-];
 
 class CalendarComponent extends React.Component {
   constructor(props) {
@@ -57,7 +50,15 @@ class CalendarComponent extends React.Component {
     const dbEvent = firebase.firestore().collection("events");
     return dbEvent.get().then(collection => {
       const docs = [];
-      collection.forEach(doc => docs.push({ id: doc.id, ...doc.data() }));
+      collection.forEach(doc => {
+        const { name, startDate, endDate } = doc.data();
+        docs.push({
+          id: doc.id,
+          title: name,
+          start: new Date(startDate),
+          end: new Date(endDate)
+        });
+      });
       return docs;
     });
   }
@@ -76,17 +77,28 @@ class CalendarComponent extends React.Component {
     this.setState({ openCreateEvent: true, selectedDates });
   };
 
-  createEvent = () => {
-    // TODO: save event
-    this.closeDialog();
-  };
-
-  closeDialog = () => {
+  closeDialog = createdEvent => {
+    if (createdEvent) {
+      console.log([createdEvent, ...this.state.events]);
+      this.setState({
+        openCreateEvent: false,
+        events: [createdEvent, ...this.state.events]
+      });
+      return;
+    }
     this.setState({ openCreateEvent: false });
   };
 
   render() {
-    if (this.state.loading) {
+    const {
+      loading,
+      resources,
+      events,
+      openCreateEvent,
+      selectedDates
+    } = this.state;
+
+    if (loading) {
       return <LoadingContainer />;
     }
     return (
@@ -94,21 +106,21 @@ class CalendarComponent extends React.Component {
         <Calendar
           selectable
           localizer={localizer}
-          events={myEventsList}
-          resources={this.state.resources}
+          events={events}
+          resources={resources}
           resourceIdAccessor="id"
           resourceTitleAccessor="name"
           onSelectSlot={this.handleSelect}
-          defaultView={Views.DAY}
+          defaultView={Views.MONTH}
           views={["day", "month", "week", "work_week", "agenda"]}
           step={30}
           defaultDate={new Date()}
           components={{ toolbar: ToolBar }}
         />
         <DialogCreateEvent
-          isOpen={this.state.openCreateEvent}
+          isOpen={openCreateEvent}
           onClose={this.closeDialog}
-          selectedDates={this.state.selectedDates}
+          selectedDates={selectedDates}
         />
       </Container>
     );
