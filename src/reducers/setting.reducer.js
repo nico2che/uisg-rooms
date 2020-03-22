@@ -1,27 +1,26 @@
-import * as userActions from "../actions/user.action";
+import { actionTypes } from "../redux/actions";
 
 const initialState = {
-  user: {},
   loading: false,
   error: null
 };
 
-function userReducer(state = initialState, action) {
+function settingReducer(state = initialState, action) {
   switch (action.type) {
-    case userActions.LOGIN:
+    case actionTypes.setting.GET_ALL:
       return {
         ...state,
         loading: true
       };
-    case userActions.LOGIN_SUCCESS: {
-      const { user } = action;
+    case actionTypes.setting.GET_ALL_SUCCESS: {
+      const { entities } = action;
       return {
         ...state,
         loading: false,
-        user
+        settings: entities
       };
     }
-    case userActions.LOGIN_FAILURE: {
+    case actionTypes.setting.GET_ALL_FAILURE: {
       const { error } = action;
       return {
         ...state,
@@ -34,4 +33,4 @@ function userReducer(state = initialState, action) {
   }
 }
 
-export default userReducer;
+export default settingReducer;

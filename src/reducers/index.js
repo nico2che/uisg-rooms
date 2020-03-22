@@ -1,9 +1,13 @@
 import { combineReducers } from "redux";
 
-import userReducer from "./user.reducer";
+import eventReducer from "./event.reducer";
+import resourceReducer from "./resource.reducer";
+import settingReducer from "./setting.reducer";
 
 const reducers = combineReducers({
-  user: userReducer
+  events: eventReducer,
+  resources: resourceReducer,
+  settings: settingReducer
 });
 
 export default reducers;

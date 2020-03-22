@@ -1,10 +1,11 @@
 import React from "react";
 import { Calendar, momentLocalizer, Views } from "react-big-calendar";
 import moment from "moment";
+import { connect } from "react-redux";
+
 import Container from "@material-ui/core/Container";
 
-import * as Actions from "../redux/actions";
-import * as api from "../api";
+import { actions } from "../redux/actions";
 
 import DialogCreateEvent from "../components/DialogCreateEvent";
 import LoadingContainer from "../components/LoadingContainer";
@@ -27,48 +28,38 @@ class CalendarComponent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: true,
-      resources: [],
-      events: [],
       openCreateEvent: false,
       selectedDates: {}
     };
   }
 
   componentDidMount() {
-    Promise.all([
-      api.getResources(),
-      api.getEvents()
-    ]).then(([resources, events]) =>
-      this.setState({ resources, events, loading: false })
-    );
+    if (!this.props.resources) {
+      this.props.getResources();
+    }
+    if (!this.props.events) {
+      this.props.getEvents();
+    }
   }
 
   handleSelect = selectedDates => {
-    // TODO: save schedules
     this.setState({ openCreateEvent: true, selectedDates });
   };
 
   closeDialog = createdEvent => {
-    if (createdEvent) {
-      console.log([createdEvent, ...this.state.events]);
-      this.setState({
-        openCreateEvent: false,
-        events: [createdEvent, ...this.state.events]
-      });
-      return;
-    }
+    // if (createdEvent) {
+    //   this.setState({
+    //     openCreateEvent: false,
+    //     events: [createdEvent, ...this.state.events]
+    //   });
+    //   return;
+    // }
     this.setState({ openCreateEvent: false });
   };
 
   render() {
-    const {
-      loading,
-      resources,
-      events,
-      openCreateEvent,
-      selectedDates
-    } = this.state;
+    const { openCreateEvent, selectedDates } = this.state;
+    const { events = [], resources = [], loading } = this.props;
 
     if (loading) {
       return <LoadingContainer />;
@@ -99,4 +90,17 @@ class CalendarComponent extends React.Component {
   }
 }
 
-export default withStyles(styles)(CalendarComponent);
+const mapStateToProps = ({ events, resources }) => ({
+  events: events.events,
+  resources: resources.resources,
+  loading: events.loading || resources.loading
+});
+
+const mapDispatchToProps = dispatch => ({
+  getEvents: () => dispatch(actions.event.getAll()),
+  getResources: () => dispatch(actions.resource.getAll())
+});
+
+export default withStyles(styles)(
+  connect(mapStateToProps, mapDispatchToProps)(CalendarComponent)
+);

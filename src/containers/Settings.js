@@ -2,10 +2,10 @@ import React from "react";
 
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
+import { makeStyles } from "@material-ui/core/styles";
+
 import GeneralSettings from "./Settings/GeneralSettings";
 import SpacesSettings from "./Settings/SpacesSettings";
-
-import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles(theme => ({
   card: {

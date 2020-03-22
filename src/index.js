@@ -4,9 +4,6 @@ import ReactDOM from "react-dom";
 import { createStore, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
 import createSagaMiddleware from "redux-saga";
-import { persistStore, persistReducer } from "redux-persist";
-import storage from "redux-persist/lib/storage";
-import { PersistGate } from "redux-persist/integration/react";
 import { createLogger } from "redux-logger";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
@@ -23,11 +20,6 @@ const middlewares = [];
 const sagaMiddleware = createSagaMiddleware();
 middlewares.push(sagaMiddleware);
 
-// const persistConfig = {
-//   key: "root",
-//   storage
-// };
-
 if (process.env.NODE_ENV === "development") {
   middlewares.push(
     createLogger({
@@ -36,21 +28,14 @@ if (process.env.NODE_ENV === "development") {
   );
 }
 
-const store = createStore(
-  // persistReducer(persistConfig, reducers),
-  applyMiddleware(...middlewares)
-);
+const store = createStore(reducers, applyMiddleware(...middlewares));
 
-// sagaMiddleware.run(sagas);
-
-// const persistor = persistStore(store);
+sagaMiddleware.run(sagas);
 
 ReactDOM.render(
   <Provider store={store}>
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
-      {/* <PersistGate loading={null} persistor={persistor}> */}
       <App />
-      {/* </PersistGate> */}
     </MuiPickersUtilsProvider>
   </Provider>,
   document.getElementById("root")

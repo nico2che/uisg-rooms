@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { Formik, Form, ErrorMessage, FieldArray } from "formik";
-
-import * as api from "../../api";
+import { useSelector, useDispatch } from "react-redux";
 
 import AddIcon from "@material-ui/icons/Add";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -12,8 +11,10 @@ import CardActions from "@material-ui/core/CardActions";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
-
 import { makeStyles } from "@material-ui/core/styles";
+
+import * as api from "../../api";
+import { actions } from "../../redux/actions";
 
 const useStyles = makeStyles(theme => ({
   appBarSpacer: theme.mixins.toolbar,
@@ -47,15 +48,17 @@ const useStyles = makeStyles(theme => ({
 
 function SpacesSettings() {
   const classes = useStyles();
-  const [spaces, setSpaces] = useState([]);
+  const { resources, loading } = useSelector(({ resources }) => resources);
+  const dispatch = useDispatch();
 
-  if (!spaces.length) {
-    api
-      .getResources()
-      .then(resources => setSpaces(resources))
-      .catch(function(error) {
-        console.log("Error getting documents: ", error);
-      });
+  useEffect(() => {
+    if (!resources) {
+      dispatch(actions.resource.getAll());
+    }
+    return () => {};
+  }, []);
+
+  if (loading) {
     return (
       <div>
         <Skeleton />
@@ -69,18 +72,19 @@ function SpacesSettings() {
   return (
     <Formik
       initialValues={{
-        spaces
+        resources
       }}
       validate={values => ({
-        // TODO
+        // TODO: validate data
       })}
       onSubmit={values => {
         // Delete missing data
-        spaces
-          .filter(space => !values.spaces.some(s => space.id === s.id))
-          .forEach(value => api.deleteResource(value.id));
-        // Adding new or update spaces
-        values.spaces.forEach((value, index) => {
+        resources
+          .filter(space => !values.resources.some(s => space.id === s.id))
+          .forEach(value => dispatch(actions.resource.delete(value.id)));
+
+        // Adding new or update resources
+        values.resources.forEach((value, index) => {
           if (value.id) {
             api.updateResource(value.id, {
               order: index,
@@ -103,21 +107,21 @@ function SpacesSettings() {
                 Spaces
               </Typography>
               <FieldArray
-                name="spaces"
+                name="resources"
                 render={arrayHelpers =>
-                  values.spaces && values.spaces.length > 0 ? (
+                  values.resources && values.resources.length > 0 ? (
                     <>
-                      {values.spaces.map((space, index) => (
+                      {values.resources.map((resource, index) => (
                         <div key={index}>
                           <div className={classes.row}>
                             <TextField
                               required
-                              id={`spaces.${index}.name`}
-                              name={`spaces.${index}.name`}
+                              id={`resources.${index}.name`}
+                              name={`resources.${index}.name`}
                               label={"Name"}
                               onChange={handleChange}
                               onBlur={handleBlur}
-                              value={space.name}
+                              value={resource.name}
                               fullWidth
                             />
                             <Button
@@ -131,7 +135,7 @@ function SpacesSettings() {
                             </Button>
                           </div>
                           <ErrorMessage
-                            name={`spaces.${index}.name`}
+                            name={`resources.${index}.name`}
                             component="div"
                           />
                         </div>

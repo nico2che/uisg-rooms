@@ -1,16 +1,16 @@
 import { all, takeLatest } from "redux-saga/effects";
 
-// import * as catActions from 'actions/cat.action';
-// import * as scoreActions from 'actions/score.action';
+import { actionTypes } from "../redux/actions";
 
-// import getAllCat from "./cat.saga";
-// import { getAllScore, updateScore } from "./score.saga";
+import { getEvents } from "./event.saga";
+import { getResources, deleteResource } from "./resource.saga";
 
 function* sagas() {
   yield all([
-    // takeLatest(catActions.GET_CAT, getAllCat),
-    // takeLatest(scoreActions.GET_SCORE, getAllScore),
-    // takeLatest(scoreActions.UPDATE_SCORE, updateScore),
+    takeLatest(actionTypes.event.GET_ALL, getEvents),
+
+    takeLatest(actionTypes.resource.GET_ALL, getResources),
+    takeLatest(actionTypes.resource.DELETE, deleteResource)
   ]);
 }
 
