@@ -2,7 +2,7 @@ import React from "react";
 
 import { makeStyles } from "@material-ui/core/styles";
 
-import { Switch, BrowserRouter, Redirect, Route } from "react-router-dom";
+import { Switch, BrowserRouter, Route } from "react-router-dom";
 
 import Calendar from "./containers/Calendar";
 import Settings from "./containers/Settings";

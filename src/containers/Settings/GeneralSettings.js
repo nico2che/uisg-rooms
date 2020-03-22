@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Formik, Form, ErrorMessage } from "formik";
 
-import firebase from "../../firebase";
+import * as api from "../../api";
 
 import Skeleton from "@material-ui/lab/Skeleton";
 import Card from "@material-ui/core/Card";
@@ -37,12 +37,7 @@ function GeneralSettings() {
   const [values, setValues] = useState(null);
 
   if (!values) {
-    firebase
-      .firestore()
-      .collection("settings")
-      .doc("general")
-      .get()
-      .then(doc => setValues(doc.data()));
+    api.getSettings().then(setValues);
     return (
       <div>
         <Skeleton />
@@ -63,13 +58,7 @@ function GeneralSettings() {
         }
         return errors;
       }}
-      onSubmit={values => {
-        firebase
-          .firestore()
-          .collection("settings")
-          .doc("general")
-          .set(values);
-      }}
+      onSubmit={api.setSettings}
     >
       {({ values, handleChange, handleSubmit, handleBlur, isSubmitting }) => (
         <Form className={classes.form}>

@@ -1,7 +1,7 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 
-import firebase from "../firebase";
+import * as api from "../api";
 
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
@@ -63,15 +63,11 @@ export default function DialogLogin() {
 
   const onSubmit = e => {
     // TODO: loading
-    const method =
-      mode === "signIn"
-        ? "signInWithEmailAndPassword"
-        : "createUserWithEmailAndPassword";
-    firebase
-      .auth()
-      [method](email, password)
-      .then(console.log)
-      .catch(e => setError(e.message));
+    if (mode === "signIn") {
+      api.logIn(email, password).catch(e => setError(e.message));
+    } else {
+      api.createUser(email, password).catch(e => setError(e.message));
+    }
   };
 
   return (

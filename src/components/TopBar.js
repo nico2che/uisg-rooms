@@ -2,7 +2,7 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { useHistory, NavLink } from "react-router-dom";
 
-import firebase from "../firebase";
+import * as api from "../api";
 
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -36,7 +36,7 @@ function Logged({ user }) {
         <Settings />
       </IconButton>
       {user.email}
-      <IconButton onClick={() => firebase.auth().signOut()} color="inherit">
+      <IconButton onClick={() => api.logOut()} color="inherit">
         <ExitToAppIcon />
       </IconButton>
     </div>
@@ -46,7 +46,7 @@ function Logged({ user }) {
 function TopBar() {
   const classes = useStyles();
   const [user, setUser] = React.useState(null);
-  firebase.auth().onAuthStateChanged(setUser);
+  api.getCurrentUser().then(setUser);
   return (
     <AppBar position="static">
       <Toolbar>

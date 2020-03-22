@@ -2,7 +2,7 @@ import React from "react";
 import { Formik, Form, ErrorMessage } from "formik";
 import { DatePicker } from "@material-ui/pickers";
 
-import firebase from "../firebase";
+import * as api from "../api";
 
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
@@ -41,14 +41,11 @@ function DialogCreateEvent({ isOpen, onClose, selectedDates }) {
 
   const createEvent = async event => {
     const { name, startDate, endDate } = event;
-    const { id } = await firebase
-      .firestore()
-      .collection("events")
-      .add({
-        name,
-        startDate: startDate.getTime(),
-        endDate: endDate.getTime()
-      });
+    const { id } = await api.createEvent({
+      name,
+      startDate: startDate.getTime(),
+      endDate: endDate.getTime()
+    });
     onClose({
       id,
       title: name,

@@ -3,7 +3,8 @@ import { Calendar, momentLocalizer, Views } from "react-big-calendar";
 import moment from "moment";
 import Container from "@material-ui/core/Container";
 
-import firebase from "../firebase";
+import * as Actions from "../redux/actions";
+import * as api from "../api";
 
 import DialogCreateEvent from "../components/DialogCreateEvent";
 import LoadingContainer from "../components/LoadingContainer";
@@ -11,7 +12,7 @@ import ToolBar from "./Calendar/Toolbar";
 
 import { withStyles } from "@material-ui/core/styles";
 
-const styles = theme => ({
+const styles = () => ({
   container: {
     maxWidth: "100%",
     backgroundColor: "white",
@@ -34,39 +35,10 @@ class CalendarComponent extends React.Component {
     };
   }
 
-  getResources() {
-    const dbSpace = firebase.firestore().collection("spaces");
-    return dbSpace
-      .orderBy("order")
-      .get()
-      .then(collection => {
-        const docs = [];
-        collection.forEach(doc => docs.push({ id: doc.id, ...doc.data() }));
-        return docs;
-      });
-  }
-
-  getEvents() {
-    const dbEvent = firebase.firestore().collection("events");
-    return dbEvent.get().then(collection => {
-      const docs = [];
-      collection.forEach(doc => {
-        const { name, startDate, endDate } = doc.data();
-        docs.push({
-          id: doc.id,
-          title: name,
-          start: new Date(startDate),
-          end: new Date(endDate)
-        });
-      });
-      return docs;
-    });
-  }
-
   componentDidMount() {
     Promise.all([
-      this.getResources(),
-      this.getEvents()
+      api.getResources(),
+      api.getEvents()
     ]).then(([resources, events]) =>
       this.setState({ resources, events, loading: false })
     );

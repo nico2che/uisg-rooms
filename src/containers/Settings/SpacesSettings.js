@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Formik, Form, ErrorMessage, FieldArray } from "formik";
 
-import firebase from "../../firebase";
+import * as api from "../../api";
 
 import AddIcon from "@material-ui/icons/Add";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -45,21 +45,14 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const dbSpace = firebase.firestore().collection("spaces");
-
 function SpacesSettings() {
   const classes = useStyles();
   const [spaces, setSpaces] = useState([]);
 
   if (!spaces.length) {
-    dbSpace
-      .orderBy("order")
-      .get()
-      .then(function(collection) {
-        const spaces = [];
-        collection.forEach(doc => spaces.push({ id: doc.id, ...doc.data() }));
-        setSpaces(spaces);
-      })
+    api
+      .getResources()
+      .then(resources => setSpaces(resources))
       .catch(function(error) {
         console.log("Error getting documents: ", error);
       });
@@ -78,23 +71,23 @@ function SpacesSettings() {
       initialValues={{
         spaces
       }}
-      validate={values => ({})}
+      validate={values => ({
+        // TODO
+      })}
       onSubmit={values => {
         // Delete missing data
         spaces
           .filter(space => !values.spaces.some(s => space.id === s.id))
-          .forEach(value => {
-            dbSpace.doc(value.id).delete();
-          });
+          .forEach(value => api.deleteResource(value.id));
         // Adding new or update spaces
         values.spaces.forEach((value, index) => {
           if (value.id) {
-            dbSpace.doc(value.id).set({
+            api.updateResource(value.id, {
               order: index,
               name: value.name
             });
           } else {
-            dbSpace.add({
+            api.createResource({
               order: index,
               name: value.name
             });

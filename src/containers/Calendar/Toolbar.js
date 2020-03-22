@@ -1,7 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
 import { DatePicker } from "@material-ui/pickers";
-
-import firebase from "../../firebase";
 
 import AppBar from "@material-ui/core/AppBar";
 import Button from "@material-ui/core/Button";
