@@ -17,40 +17,40 @@ import Slide from "@material-ui/core/Slide";
 
 import { makeStyles } from "@material-ui/core/styles";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   appBar: {
-    position: "relative"
+    position: "relative",
   },
   title: {
     marginLeft: theme.spacing(2),
-    flex: 1
+    flex: 1,
   },
   form: {
     margin: theme.spacing(3),
     textAlign: "center",
-    color: theme.palette.text.secondary
-  }
+    color: theme.palette.text.secondary,
+  },
 }));
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-function DialogCreateEvent({ isOpen, onClose, selectedDates }) {
+function DialogCreateEvent({ isOpen, onClose, selectedDates = {} }) {
   const classes = useStyles();
 
-  const createEvent = async event => {
+  const createEvent = async (event) => {
     const { name, startDate, endDate } = event;
     const { id } = await api.createEvent({
       name,
       startDate: startDate.getTime(),
-      endDate: endDate.getTime()
+      endDate: endDate.getTime(),
     });
     onClose({
       id,
       title: name,
       start: startDate,
-      end: endDate
+      end: endDate,
     });
   };
 
@@ -67,9 +67,9 @@ function DialogCreateEvent({ isOpen, onClose, selectedDates }) {
         initialValues={{
           name: "",
           startDate: new Date(start),
-          endDate: new Date(end)
+          endDate: new Date(end),
         }}
-        validate={values => {
+        validate={(values) => {
           const errors = {};
           if (!values.name) {
             errors.name = "Name is required";

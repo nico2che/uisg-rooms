@@ -9,23 +9,23 @@ import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import { makeStyles } from "@material-ui/core/styles";
 import { Toolbar, ButtonGroup } from "@material-ui/core";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   arrows: {
-    marginLeft: theme.spacing(3)
+    marginLeft: theme.spacing(3),
   },
   noElevation: {
-    boxShadow: 0
-  }
+    boxShadow: 0,
+  },
 }));
 
 function ToolBar(props) {
   const { onNavigate, onView, date, localizer, views } = props;
   const classes = useStyles();
   return (
-    <AppBar position="relative" color="white" elevation={0}>
+    <AppBar position="relative" color="inherit" elevation={0}>
       <Toolbar>
         <ButtonGroup color="primary">
-          {views.map(name => (
+          {views.map((name) => (
             <Button key={name} onClick={() => onView(name)}>
               {localizer.messages[name]}
             </Button>
@@ -45,7 +45,7 @@ function ToolBar(props) {
           variant="inline"
           disableToolbar
           value={date}
-          onChange={date => onNavigate("DATE", date)}
+          onChange={(date) => onNavigate("DATE", date)}
         />
       </Toolbar>
     </AppBar>

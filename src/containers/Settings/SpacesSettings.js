@@ -14,51 +14,50 @@ import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core/styles";
 
 import * as api from "../../api";
-import { actions } from "../../redux/actions";
+import { actions } from "../../redux/";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   appBarSpacer: theme.mixins.toolbar,
   content: {
     flexGrow: 1,
     height: "100vh",
     margin: theme.spacing(3),
-    overflow: "auto"
+    overflow: "auto",
   },
   card: {
-    backgroundColor: "white"
+    backgroundColor: "white",
   },
   row: {
     display: "flex",
-    alignItems: "center"
+    alignItems: "center",
   },
   addRow: {
-    marginTop: theme.spacing(2)
+    marginTop: theme.spacing(2),
   },
   deleteRow: {
     marginLeft: theme.spacing(3),
-    marginTop: theme.spacing(1)
+    marginTop: theme.spacing(1),
   },
   form: {
-    color: theme.palette.text.secondary
+    color: theme.palette.text.secondary,
   },
   saveButton: {
-    marginLeft: "auto"
-  }
+    marginLeft: "auto",
+  },
 }));
 
 function SpacesSettings() {
   const classes = useStyles();
-  const { resources, loading } = useSelector(({ resources }) => resources);
+  const resources = useSelector((state) => state.resources);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (!resources) {
-      dispatch(actions.resource.getAll());
+    if (!resources.list) {
+      dispatch(actions.resources.load());
     }
-    return () => {};
-  }, []);
+  }, [dispatch, resources.list]);
 
-  if (loading) {
+  if (!resources.list) {
     return (
       <div>
         <Skeleton />
@@ -72,28 +71,28 @@ function SpacesSettings() {
   return (
     <Formik
       initialValues={{
-        resources
+        resources: resources.list,
       }}
-      validate={values => ({
+      validate={(values) => ({
         // TODO: validate data
       })}
-      onSubmit={values => {
+      onSubmit={(values) => {
         // Delete missing data
-        resources
-          .filter(space => !values.resources.some(s => space.id === s.id))
-          .forEach(value => dispatch(actions.resource.delete(value.id)));
+        resources.list
+          .filter((space) => !values.resources.some((s) => space.id === s.id))
+          .forEach((value) => dispatch(actions.resource.delete(value.id)));
 
         // Adding new or update resources
         values.resources.forEach((value, index) => {
           if (value.id) {
             api.updateResource(value.id, {
               order: index,
-              name: value.name
+              name: value.name,
             });
           } else {
             api.createResource({
               order: index,
-              name: value.name
+              name: value.name,
             });
           }
         });
@@ -108,7 +107,7 @@ function SpacesSettings() {
               </Typography>
               <FieldArray
                 name="resources"
-                render={arrayHelpers =>
+                render={(arrayHelpers) =>
                   values.resources && values.resources.length > 0 ? (
                     <>
                       {values.resources.map((resource, index) => (
@@ -147,7 +146,7 @@ function SpacesSettings() {
                         variant="contained"
                         onClick={() =>
                           arrayHelpers.push({
-                            name: ""
+                            name: "",
                           })
                         }
                       >

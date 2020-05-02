@@ -15,7 +15,7 @@ export function logOut() {
 }
 
 export function getCurrentUser() {
-  return new Promise(res => auth.onAuthStateChanged(res));
+  return new Promise((res) => auth.onAuthStateChanged(res));
 }
 
 export function createUser(email, password) {
@@ -24,15 +24,15 @@ export function createUser(email, password) {
 
 // Event
 export function getEvents() {
-  return dbEvent.get().then(collection => {
+  return dbEvent.get().then((collection) => {
     const docs = [];
-    collection.forEach(doc => {
+    collection.forEach((doc) => {
       const { name, startDate, endDate } = doc.data();
       docs.push({
         id: doc.id,
         title: name,
         start: new Date(startDate),
-        end: new Date(endDate)
+        end: new Date(endDate),
       });
     });
     return docs;
@@ -48,9 +48,9 @@ export function getResources() {
   return dbSpace
     .orderBy("order")
     .get()
-    .then(collection => {
+    .then((collection) => {
       const docs = [];
-      collection.forEach(doc => docs.push({ id: doc.id, ...doc.data() }));
+      collection.forEach((doc) => docs.push({ id: doc.id, ...doc.data() }));
       return docs;
     });
 }
@@ -72,7 +72,7 @@ export function getSettings() {
   return dbSettings
     .doc("general")
     .get()
-    .then(doc => doc.data());
+    .then((doc) => doc.data());
 }
 
 export function setSettings(values) {

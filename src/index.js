@@ -2,35 +2,30 @@ import React from "react";
 import ReactDOM from "react-dom";
 
 import { createStore, applyMiddleware } from "redux";
+import thunk from "redux-thunk";
 import { Provider } from "react-redux";
-import createSagaMiddleware from "redux-saga";
 import { createLogger } from "redux-logger";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
 
-import reducers from "./reducers";
-import sagas from "./sagas";
+import reducers from "./redux";
 
 import App from "./App";
 import "./index.scss";
 
 import * as serviceWorker from "./serviceWorker";
 
-const middlewares = [];
-const sagaMiddleware = createSagaMiddleware();
-middlewares.push(sagaMiddleware);
+const middlewares = [thunk];
 
 if (process.env.NODE_ENV === "development") {
   middlewares.push(
     createLogger({
-      collapsed: true
+      collapsed: true,
     })
   );
 }
 
 const store = createStore(reducers, applyMiddleware(...middlewares));
-
-sagaMiddleware.run(sagas);
 
 ReactDOM.render(
   <Provider store={store}>
