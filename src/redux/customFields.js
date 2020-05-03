@@ -12,30 +12,33 @@ export default prepareStore(initialState, {
   async *load() {
     yield { loading: true, error: undefined };
     try {
-      const list = await api.getResources();
+      const list = await api.getCustomFields();
       yield { loading: false, list };
     } catch (error) {
       yield { loading: false, error: error.message };
     }
   },
 
-  async *add(resource) {
+  async *add(customField) {
     yield { loading: true, error: undefined };
     try {
-      const id = await api.createResource(resource);
-      yield { loading: false, list: [...this.list, { ...resource, id }] };
+      const id = await api.createCustomField(customField);
+      yield { loading: false, list: [...this.list, { ...customField, id }] };
     } catch (error) {
       yield { loading: false, error: error.message };
     }
   },
 
-  async *update(id, resource) {
+  async *update(id, customField) {
     yield { loading: true, error: undefined };
     try {
-      await api.updateResource(id, resource);
+      await api.updateCustomField(id, customField);
       yield {
         loading: false,
-        list: [...this.list.filter((resource) => resource.id !== id), resource],
+        list: [
+          ...this.list.filter((customField) => customField.id !== id),
+          customField,
+        ],
       };
     } catch (error) {
       yield { loading: false, error: error.message };
@@ -45,7 +48,7 @@ export default prepareStore(initialState, {
   async *delete(id) {
     yield { loading: true, error: undefined };
     try {
-      const list = await api.deleteResource(id);
+      const list = await api.deleteCustomField(id);
       yield { loading: false, list };
     } catch (error) {
       yield { loading: false, error: error.message };

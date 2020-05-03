@@ -6,30 +6,40 @@ import { Switch, BrowserRouter, Route } from "react-router-dom";
 
 import Calendar from "./containers/Calendar";
 import Settings from "./containers/Settings";
+import Resources from "./containers/Resources";
+import CustomFields from "./containers/CustomFields";
 
 import TopBar from "./components/TopBar";
 import "./App.scss";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: "flex",
+  },
   content: {
     flexGrow: 1,
+    marginTop: "64px",
     height: "calc(100vh - 64px)",
-    overflow: "auto"
-  }
+    overflow: "auto",
+  },
 }));
 
 function App() {
   const classes = useStyles();
   return (
     <BrowserRouter basename={process.env.PUBLIC_URL}>
-      <TopBar />
-      <main className={classes.content}>
-        <Switch>
-          <Route exact path="/" component={Calendar} />
-          <Route path="/settings" component={Settings} />
-          {/* <Redirect exact to="/" /> */}
-        </Switch>
-      </main>
+      <div className={classes.root}>
+        <TopBar />
+        <main className={classes.content}>
+          <Switch>
+            <Route exact path="/" component={Calendar} />
+            <Route path="/settings" component={Settings} />
+            <Route path="/resources" component={Resources} />
+            <Route path="/custom-fields" component={CustomFields} />
+            {/* <Redirect exact to="/" /> */}
+          </Switch>
+        </main>
+      </div>
     </BrowserRouter>
   );
 }

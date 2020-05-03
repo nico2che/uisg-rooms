@@ -3,7 +3,7 @@ import * as firebase from "./firebase";
 const currentDrive = "firebase";
 
 const drivers = {
-  firebase
+  firebase,
 };
 
 export const {
@@ -17,6 +17,10 @@ export const {
   createResource,
   updateResource,
   deleteResource,
+  getCustomFields,
+  createCustomField,
+  updateCustomField,
+  deleteCustomField,
   getSettings,
-  setSettings
+  setSettings,
 } = drivers[currentDrive];

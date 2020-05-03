@@ -53,7 +53,7 @@ function CalendarComponent() {
     //   });
     //   return;
     // }
-    setSelectedDates(null);
+    setSelectedDates();
   };
 
   if (!events.list || !resources.list) {

@@ -4,6 +4,7 @@ const auth = firebase.auth();
 const dbSpace = firebase.firestore().collection("spaces");
 const dbEvent = firebase.firestore().collection("events");
 const dbSettings = firebase.firestore().collection("settings");
+const dbFields = firebase.firestore().collection("customFields");
 
 // User
 export function logIn(email, password) {
@@ -40,7 +41,7 @@ export function getEvents() {
 }
 
 export function createEvent(event) {
-  return dbEvent.add(event);
+  return dbEvent.add(event).then((docRef) => docRef.id);
 }
 
 // Resource
@@ -56,7 +57,7 @@ export function getResources() {
 }
 
 export function createResource(event) {
-  return dbSpace.add(event);
+  return dbSpace.add(event).then((docRef) => docRef.id);
 }
 
 export function updateResource(id, event) {
@@ -65,6 +66,27 @@ export function updateResource(id, event) {
 
 export function deleteResource(id) {
   return dbSpace.doc(id).delete();
+}
+
+// Custom fields
+export function getCustomFields() {
+  return dbFields.get().then((collection) => {
+    const docs = [];
+    collection.forEach((doc) => docs.push({ id: doc.id, ...doc.data() }));
+    return docs;
+  });
+}
+
+export function createCustomField(event) {
+  return dbFields.add(event).then((docRef) => docRef.id);
+}
+
+export function updateCustomField(id, event) {
+  return dbFields.doc(id).set(event);
+}
+
+export function deleteCustomField(id) {
+  return dbFields.doc(id).delete();
 }
 
 // Setting
