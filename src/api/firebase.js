@@ -36,6 +36,10 @@ export function createEvent(event) {
   return dbEvent.add(event).then((docRef) => docRef.id);
 }
 
+export function updateEvent(id, event) {
+  return dbEvent.doc(id).set(event);
+}
+
 // Resource
 export function getResources() {
   return dbSpace

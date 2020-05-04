@@ -13,6 +13,7 @@ export const {
   createUser,
   getEvents,
   createEvent,
+  updateEvent,
   getResources,
   createResource,
   updateResource,

@@ -25,17 +25,17 @@ const useStyles = makeStyles(() => ({
 const localizer = momentLocalizer(moment);
 
 function eventToCalendar(event) {
-  const { name: title, startDate, endDate } = event;
-  return { title, start: new Date(startDate), end: new Date(endDate) };
+  const { id, name: title, startDate, endDate } = event;
+  return { id, title, start: new Date(startDate), end: new Date(endDate) };
 }
 
 function CalendarComponent() {
+  const classes = useStyles();
   const events = useSelector((state) => state.events);
   const resources = useSelector((state) => state.resources);
   const dispatch = useDispatch();
 
-  const [selectedDates, setSelectedDates] = useState();
-  const classes = useStyles();
+  const [selected, setSelected] = useState();
 
   useEffect(() => {
     if (!events.list) {
@@ -46,12 +46,11 @@ function CalendarComponent() {
     }
   }, [dispatch, events.list, resources.list]);
 
-  const handleSelect = (selectedDates) => {
-    setSelectedDates(selectedDates);
+  const handleSelect = ({ start, end }) => {
+    setSelected({ startDate: start.getTime(), endDate: end.getTime() });
   };
-
-  const closeDialog = (createdEvent) => {
-    setSelectedDates();
+  const closeDialog = () => {
+    setSelected();
   };
 
   if (!events.list || !resources.list) {
@@ -67,6 +66,7 @@ function CalendarComponent() {
         resourceIdAccessor="id"
         resourceTitleAccessor="name"
         onSelectSlot={handleSelect}
+        onSelectEvent={(event) => setSelected(event)}
         defaultView={Views.MONTH}
         views={["day", "month", "week", "work_week", "agenda"]}
         step={30}
@@ -74,9 +74,9 @@ function CalendarComponent() {
         components={{ toolbar: ToolBar }}
       />
       <DialogEvent
-        isOpen={!!selectedDates}
+        isOpen={!!selected}
         onClose={closeDialog}
-        selectedDates={selectedDates}
+        selected={selected}
       />
     </Container>
   );

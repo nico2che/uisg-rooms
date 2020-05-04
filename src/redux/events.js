@@ -28,4 +28,17 @@ export default prepareStore(initialState, {
       yield { loading: false, error: error.message };
     }
   },
+
+  async *update(id, event) {
+    yield { loading: true, error: undefined };
+    try {
+      await api.updateEvent(id, event);
+      yield {
+        loading: false,
+        list: [...this.list.filter((event) => event.id !== id), event],
+      };
+    } catch (error) {
+      yield { loading: false, error: error.message };
+    }
+  },
 });

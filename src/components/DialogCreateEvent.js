@@ -38,30 +38,39 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function DialogEvent({ isOpen, onClose, selectedDates = {} }) {
+function DialogEvent(props) {
+  const { isOpen, onClose, selected = {} } = props;
   const classes = useStyles();
   const resources = useSelector((state) => state.resources);
+  const events = useSelector((state) => state.events);
   const dispatch = useDispatch();
 
-  const createEvent = async (event) => {
-    dispatch(
-      actions.events.create({
-        ...event,
-        startDate: event.startDate.getTime(),
-        endDate: event.endDate.getTime(),
-      })
-    );
+  const saveEvent = async (event) => {
+    if (event.id) {
+      dispatch(actions.events.update(event.id, event));
+    } else {
+      dispatch(actions.events.create(event));
+    }
     onClose();
   };
 
-  const { start, end } = selectedDates;
+  if (!isOpen) {
+    return "";
+  }
 
-  const event = {
-    name: "",
-    startDate: new Date(start),
-    endDate: new Date(end),
-    resource: "",
-  };
+  const { id, startDate, endDate } = selected;
+
+  let event;
+  if (id) {
+    event = events.list.find((event) => event.id === id);
+  }
+  if (!event) {
+    event = {
+      name: "",
+      startDate,
+      endDate,
+    };
+  }
 
   return (
     <Dialog open={isOpen} onClose={onClose} fullWidth={true} maxWidth="sm">
@@ -75,9 +84,16 @@ function DialogEvent({ isOpen, onClose, selectedDates = {} }) {
           }
           return errors;
         }}
-        onSubmit={createEvent}
+        onSubmit={saveEvent}
       >
-        {({ values, handleChange, handleSubmit, handleBlur, isSubmitting }) => (
+        {({
+          values,
+          handleChange,
+          handleSubmit,
+          handleBlur,
+          isSubmitting,
+          setFieldValue,
+        }) => (
           <Form className={classes.form}>
             <DialogContent className={classes.content}>
               <Grid container spacing={3}>
@@ -89,7 +105,7 @@ function DialogEvent({ isOpen, onClose, selectedDates = {} }) {
                     label="Event name"
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    value={values.email}
+                    value={values.name}
                     fullWidth
                     autoComplete="off"
                     autoFocus
@@ -105,7 +121,9 @@ function DialogEvent({ isOpen, onClose, selectedDates = {} }) {
                     label="Start date"
                     disableToolbar
                     value={values.startDate}
-                    onChange={handleChange}
+                    onChange={(date) =>
+                      setFieldValue("startDate", date.getTime())
+                    }
                     onBlur={handleBlur}
                     fullWidth
                   />
@@ -120,7 +138,9 @@ function DialogEvent({ isOpen, onClose, selectedDates = {} }) {
                     label="End date"
                     disableToolbar
                     value={values.endDate}
-                    onChange={handleChange}
+                    onChange={(date) =>
+                      setFieldValue("endDate", date.getTime())
+                    }
                     onBlur={handleBlur}
                     fullWidth
                   />
@@ -136,7 +156,7 @@ function DialogEvent({ isOpen, onClose, selectedDates = {} }) {
                     labelId="resource-label"
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    value={values.resource}
+                    value={values.resource || ""}
                     fullWidth
                   >
                     {resources.list.map((resource) => (
