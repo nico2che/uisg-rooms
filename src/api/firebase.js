@@ -27,15 +27,7 @@ export function createUser(email, password) {
 export function getEvents() {
   return dbEvent.get().then((collection) => {
     const docs = [];
-    collection.forEach((doc) => {
-      const { name, startDate, endDate } = doc.data();
-      docs.push({
-        id: doc.id,
-        title: name,
-        start: new Date(startDate),
-        end: new Date(endDate),
-      });
-    });
+    collection.forEach((doc) => docs.push({ id: doc.id, ...doc.data() }));
     return docs;
   });
 }

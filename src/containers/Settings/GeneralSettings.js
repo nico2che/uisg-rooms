@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Formik, Form, ErrorMessage } from "formik";
+import { makeStyles } from "@material-ui/core/styles";
 
 import * as api from "../../api";
 
@@ -11,25 +12,23 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 
-import { makeStyles } from "@material-ui/core/styles";
-
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   appBarSpacer: theme.mixins.toolbar,
   content: {
     flexGrow: 1,
     height: "100vh",
     margin: theme.spacing(3),
-    overflow: "auto"
+    overflow: "auto",
   },
   card: {
-    backgroundColor: "white"
+    backgroundColor: "white",
   },
   form: {
-    color: theme.palette.text.secondary
+    color: theme.palette.text.secondary,
   },
   saveButton: {
-    marginLeft: "auto"
-  }
+    marginLeft: "auto",
+  },
 }));
 
 function GeneralSettings() {
@@ -51,7 +50,7 @@ function GeneralSettings() {
   return (
     <Formik
       initialValues={values}
-      validate={values => {
+      validate={(values) => {
         const errors = {};
         if (!values.name) {
           errors.name = "Name is required";

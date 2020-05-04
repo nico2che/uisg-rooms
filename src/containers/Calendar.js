@@ -7,7 +7,7 @@ import Container from "@material-ui/core/Container";
 
 import { actions } from "../redux/";
 
-import DialogCreateEvent from "../components/DialogCreateEvent";
+import DialogEvent from "../components/DialogCreateEvent";
 import LoadingContainer from "../components/LoadingContainer";
 import ToolBar from "./Calendar/Toolbar";
 
@@ -23,6 +23,11 @@ const useStyles = makeStyles(() => ({
 }));
 
 const localizer = momentLocalizer(moment);
+
+function eventToCalendar(event) {
+  const { name: title, startDate, endDate } = event;
+  return { title, start: new Date(startDate), end: new Date(endDate) };
+}
 
 function CalendarComponent() {
   const events = useSelector((state) => state.events);
@@ -46,13 +51,6 @@ function CalendarComponent() {
   };
 
   const closeDialog = (createdEvent) => {
-    // if (createdEvent) {
-    //   this.setState({
-    //     openCreateEvent: false,
-    //     events: [createdEvent, ...this.state.events]
-    //   });
-    //   return;
-    // }
     setSelectedDates();
   };
 
@@ -64,7 +62,7 @@ function CalendarComponent() {
       <Calendar
         selectable
         localizer={localizer}
-        events={events.list}
+        events={events.list.map(eventToCalendar)}
         resources={resources.list}
         resourceIdAccessor="id"
         resourceTitleAccessor="name"
@@ -75,7 +73,7 @@ function CalendarComponent() {
         defaultDate={new Date()}
         components={{ toolbar: ToolBar }}
       />
-      <DialogCreateEvent
+      <DialogEvent
         isOpen={!!selectedDates}
         onClose={closeDialog}
         selectedDates={selectedDates}

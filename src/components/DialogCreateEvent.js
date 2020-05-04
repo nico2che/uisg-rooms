@@ -1,7 +1,8 @@
 import React from "react";
-import { Formik, Form, ErrorMessage } from "formik";
+import { Formik, Form } from "formik";
 import { DatePicker } from "@material-ui/pickers";
 import { makeStyles } from "@material-ui/core/styles";
+import { useSelector, useDispatch } from "react-redux";
 
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
@@ -10,51 +11,63 @@ import Grid from "@material-ui/core/Grid";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
+import InputLabel from "@material-ui/core/InputLabel";
+import FormControl from "@material-ui/core/FormControl";
 
-import * as api from "../api";
+import { actions } from "../redux";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
     position: "relative",
   },
   title: {
-    marginLeft: theme.spacing(2),
-    flex: 1,
+    paddingBottom: 0,
+  },
+  content: {
+    paddingTop: "16px !important",
   },
   form: {
     color: theme.palette.text.secondary,
   },
+  formControl: {
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1),
+    width: "100%",
+  },
 }));
 
-function DialogCreateEvent({ isOpen, onClose, selectedDates = {} }) {
+function DialogEvent({ isOpen, onClose, selectedDates = {} }) {
   const classes = useStyles();
+  const resources = useSelector((state) => state.resources);
+  const dispatch = useDispatch();
 
   const createEvent = async (event) => {
-    const { name, startDate, endDate } = event;
-    const { id } = await api.createEvent({
-      name,
-      startDate: startDate.getTime(),
-      endDate: endDate.getTime(),
-    });
-    onClose({
-      id,
-      title: name,
-      start: startDate,
-      end: endDate,
-    });
+    dispatch(
+      actions.events.create({
+        ...event,
+        startDate: event.startDate.getTime(),
+        endDate: event.endDate.getTime(),
+      })
+    );
+    onClose();
   };
 
   const { start, end } = selectedDates;
 
+  const event = {
+    name: "",
+    startDate: new Date(start),
+    endDate: new Date(end),
+    resource: "",
+  };
+
   return (
     <Dialog open={isOpen} onClose={onClose} fullWidth={true} maxWidth="sm">
-      <DialogTitle>Create an event</DialogTitle>
+      <DialogTitle className={classes.title}>Create an event</DialogTitle>
       <Formik
-        initialValues={{
-          name: "",
-          startDate: new Date(start),
-          endDate: new Date(end),
-        }}
+        initialValues={event}
         validate={(values) => {
           const errors = {};
           if (!values.name) {
@@ -66,7 +79,7 @@ function DialogCreateEvent({ isOpen, onClose, selectedDates = {} }) {
       >
         {({ values, handleChange, handleSubmit, handleBlur, isSubmitting }) => (
           <Form className={classes.form}>
-            <DialogContent>
+            <DialogContent className={classes.content}>
               <Grid container spacing={3}>
                 <Grid item xs={12}>
                   <TextField
@@ -78,8 +91,9 @@ function DialogCreateEvent({ isOpen, onClose, selectedDates = {} }) {
                     onBlur={handleBlur}
                     value={values.email}
                     fullWidth
+                    autoComplete="off"
+                    autoFocus
                   />
-                  <ErrorMessage name="name" component="div" />
                 </Grid>
                 <Grid item xs={6}>
                   <DatePicker
@@ -95,7 +109,6 @@ function DialogCreateEvent({ isOpen, onClose, selectedDates = {} }) {
                     onBlur={handleBlur}
                     fullWidth
                   />
-                  <ErrorMessage name="startDate" component="div" />
                 </Grid>
                 <Grid item xs={6}>
                   <DatePicker
@@ -111,14 +124,38 @@ function DialogCreateEvent({ isOpen, onClose, selectedDates = {} }) {
                     onBlur={handleBlur}
                     fullWidth
                   />
-                  <ErrorMessage name="endDate" component="div" />
                 </Grid>
+              </Grid>
+              <Grid item xs={12}>
+                <FormControl className={classes.formControl}>
+                  <InputLabel id="resource-label">Resource</InputLabel>
+                  <Select
+                    required
+                    id="resource"
+                    name="resource"
+                    labelId="resource-label"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.resource}
+                    fullWidth
+                  >
+                    {resources.list.map((resource) => (
+                      <MenuItem key={resource.id} value={resource.id}>
+                        {resource.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
               </Grid>
               <DialogActions>
                 <Button onClick={onClose} color="default">
                   Cancel
                 </Button>
-                <Button onClick={() => {}} color="default">
+                <Button
+                  onClick={handleSubmit}
+                  disabled={isSubmitting}
+                  color="default"
+                >
                   Save
                 </Button>
               </DialogActions>
@@ -130,4 +167,4 @@ function DialogCreateEvent({ isOpen, onClose, selectedDates = {} }) {
   );
 }
 
-export default DialogCreateEvent;
+export default DialogEvent;

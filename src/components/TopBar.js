@@ -4,13 +4,11 @@ import { NavLink } from "react-router-dom";
 import clsx from "clsx";
 
 import { makeStyles } from "@material-ui/core/styles";
-import {
-  Drawer,
-  Typography,
-  IconButton,
-  Toolbar,
-  AppBar,
-} from "@material-ui/core";
+import Drawer from "@material-ui/core/Drawer";
+import Typography from "@material-ui/core/Typography";
+import IconButton from "@material-ui/core/IconButton";
+import Toolbar from "@material-ui/core/Toolbar";
+import AppBar from "@material-ui/core/AppBar";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import MenuIcon from "@material-ui/icons/Menu";

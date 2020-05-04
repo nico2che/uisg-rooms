@@ -1,17 +1,15 @@
 import React from "react";
+import { useHistory, useLocation } from "react-router-dom";
 
-import {
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  List,
-  Divider,
-} from "@material-ui/core";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import List from "@material-ui/core/List";
+import Divider from "@material-ui/core/Divider";
 import DashboardIcon from "@material-ui/icons/Dashboard";
 import EventIcon from "@material-ui/icons/Event";
 import ListIcon from "@material-ui/icons/List";
 import SettingsIcon from "@material-ui/icons/Settings";
-import { useHistory, useLocation } from "react-router-dom";
 
 const mainListItems = [
   {

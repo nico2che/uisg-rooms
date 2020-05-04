@@ -18,4 +18,14 @@ export default prepareStore(initialState, {
       yield { loading: false, error: error.message };
     }
   },
+
+  async *create(event) {
+    yield { loading: true, error: undefined };
+    try {
+      const id = await api.createEvent(event);
+      yield { loading: false, list: [...this.list, { ...event, id }] };
+    } catch (error) {
+      yield { loading: false, error: error.message };
+    }
+  },
 });
