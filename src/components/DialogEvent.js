@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { Formik, Form } from "formik";
-import { DatePicker } from "@material-ui/pickers";
+import { DatePicker, DateTimePicker } from "@material-ui/pickers";
 import { makeStyles } from "@material-ui/core/styles";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -16,7 +16,9 @@ import MenuItem from "@material-ui/core/MenuItem";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
 
-import { actions } from "../redux";
+import { actions } from "../store";
+import Checkbox from "@material-ui/core/Checkbox";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -39,11 +41,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function DialogEvent(props) {
-  const { isOpen, onClose, selected = {} } = props;
+  const { onClose, selected } = props;
+  const { id, startDate, endDate } = selected || {};
   const classes = useStyles();
   const resources = useSelector((state) => state.resources);
   const events = useSelector((state) => state.events);
   const dispatch = useDispatch();
+  const [allDay, setAllDay] = useState();
 
   const saveEvent = async (event) => {
     if (event.id) {
@@ -54,11 +58,11 @@ function DialogEvent(props) {
     onClose();
   };
 
-  if (!isOpen) {
-    return "";
+  const eventAllDay =
+    new Date(startDate).getHours() + new Date(endDate).getHours() === 0;
+  if (allDay !== eventAllDay) {
+    setAllDay(eventAllDay);
   }
-
-  const { id, startDate, endDate } = selected;
 
   let event;
   if (id) {
@@ -73,7 +77,7 @@ function DialogEvent(props) {
   }
 
   return (
-    <Dialog open={isOpen} onClose={onClose} fullWidth={true} maxWidth="sm">
+    <Dialog open onClose={onClose} fullWidth={true} maxWidth="sm">
       <DialogTitle className={classes.title}>Create an event</DialogTitle>
       <Formik
         initialValues={event}
@@ -111,38 +115,87 @@ function DialogEvent(props) {
                     autoFocus
                   />
                 </Grid>
-                <Grid item xs={6}>
-                  <DatePicker
-                    autoOk
-                    id="startDate"
-                    name="startDate"
-                    className={classes.arrows}
-                    variant="inline"
-                    label="Start date"
-                    disableToolbar
-                    value={values.startDate}
-                    onChange={(date) =>
-                      setFieldValue("startDate", date.getTime())
-                    }
-                    onBlur={handleBlur}
-                    fullWidth
-                  />
+                <Grid item xs={4}>
+                  {allDay ? (
+                    <DatePicker
+                      autoOk
+                      id="startDate"
+                      name="startDate"
+                      className={classes.arrows}
+                      variant="inline"
+                      label="Start date"
+                      disableToolbar
+                      value={values.startDate}
+                      onChange={(date) =>
+                        setFieldValue("startDate", date.getTime())
+                      }
+                      onBlur={handleBlur}
+                      fullWidth
+                    />
+                  ) : (
+                    <DateTimePicker
+                      autoOk
+                      id="startDate"
+                      name="startDate"
+                      className={classes.arrows}
+                      variant="inline"
+                      label="Start date"
+                      disableToolbar
+                      value={values.startDate}
+                      onChange={(date) =>
+                        setFieldValue("startDate", date.getTime())
+                      }
+                      onBlur={handleBlur}
+                      fullWidth
+                    />
+                  )}
                 </Grid>
-                <Grid item xs={6}>
-                  <DatePicker
-                    autoOk
-                    id="endDate"
-                    name="endDate"
-                    className={classes.arrows}
-                    variant="inline"
-                    label="End date"
-                    disableToolbar
-                    value={values.endDate}
-                    onChange={(date) =>
-                      setFieldValue("endDate", date.getTime())
+                <Grid item xs={4}>
+                  {allDay ? (
+                    <DatePicker
+                      autoOk
+                      id="endDate"
+                      name="endDate"
+                      className={classes.arrows}
+                      variant="inline"
+                      label="End date"
+                      disableToolbar
+                      value={values.endDate}
+                      onChange={(date) =>
+                        setFieldValue("endDate", date.getTime())
+                      }
+                      onBlur={handleBlur}
+                      fullWidth
+                    />
+                  ) : (
+                    <DateTimePicker
+                      autoOk
+                      id="endDate"
+                      name="endDate"
+                      className={classes.arrows}
+                      variant="inline"
+                      label="End date"
+                      disableToolbar
+                      value={values.endDate}
+                      onChange={(date) =>
+                        setFieldValue("endDate", date.getTime())
+                      }
+                      onBlur={handleBlur}
+                      fullWidth
+                    />
+                  )}
+                </Grid>
+                <Grid item xs={4}>
+                  <FormControlLabel
+                    label="All day"
+                    control={
+                      <Checkbox
+                        value=""
+                        checked={allDay}
+                        onChange={() => setAllDay(!allDay)}
+                        color="primary"
+                      />
                     }
-                    onBlur={handleBlur}
-                    fullWidth
                   />
                 </Grid>
               </Grid>

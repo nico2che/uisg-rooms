@@ -5,9 +5,9 @@ import { useDispatch, useSelector } from "react-redux";
 
 import Container from "@material-ui/core/Container";
 
-import { actions } from "../redux/";
+import { actions } from "../store";
 
-import DialogEvent from "../components/DialogCreateEvent";
+import DialogEvent from "../components/DialogEvent";
 import LoadingContainer from "../components/LoadingContainer";
 import ToolBar from "./Calendar/Toolbar";
 
@@ -73,11 +73,7 @@ function CalendarComponent() {
         defaultDate={new Date()}
         components={{ toolbar: ToolBar }}
       />
-      <DialogEvent
-        isOpen={!!selected}
-        onClose={closeDialog}
-        selected={selected}
-      />
+      {!!selected && <DialogEvent onClose={closeDialog} selected={selected} />}
     </Container>
   );
 }

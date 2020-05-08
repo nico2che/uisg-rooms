@@ -36,7 +36,6 @@ function App() {
             <Route path="/settings" component={Settings} />
             <Route path="/resources" component={Resources} />
             <Route path="/custom-fields" component={CustomFields} />
-            {/* <Redirect exact to="/" /> */}
           </Switch>
         </main>
       </div>
