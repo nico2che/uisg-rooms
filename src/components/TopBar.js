@@ -124,7 +124,7 @@ function TopBar() {
             className={classes.title}
           >
             <NavLink to="/" className={classes.homeLink}>
-              UISG Rooms
+              Liska
             </NavLink>
           </Typography>
           {user ? (
