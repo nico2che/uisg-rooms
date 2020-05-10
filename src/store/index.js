@@ -5,14 +5,14 @@ import events from "./events.js";
 import resources from "./resources.js";
 import customFields from "./customFields.js";
 import settings from "./settings.js";
-import user from "./user.js";
+import session from "./session.js";
 
 export const { reducers, actions, initialState } = combineStores({
   events,
   resources,
   customFields,
   settings,
-  user,
+  session,
 });
 
 export default combineReducers(reducers);

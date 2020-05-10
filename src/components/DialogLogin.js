@@ -68,7 +68,7 @@ export default function DialogLogin() {
     if (mode === "signIn") {
       api
         .logIn(email, password)
-        .then(({ user }) => dispatch(actions.user.logIn(user)))
+        .then(({ user }) => dispatch(actions.session.logIn(user)))
         .catch((e) => setError(e.message));
     } else {
       api.createUser(email, password).catch((e) => setError(e.message));

@@ -12,7 +12,7 @@ export default prepareStore(initialState, {
   async *getCurrentUser() {
     yield { loading: true, error: undefined };
     try {
-      const user = await api.getCurrentUser();
+      const user = await api.getCurrentSession();
       yield { loading: false, user };
     } catch (error) {
       yield { loading: false, error: error.message };

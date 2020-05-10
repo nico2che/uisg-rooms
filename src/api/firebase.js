@@ -15,7 +15,7 @@ export function logOut() {
   return auth.signOut();
 }
 
-export function getCurrentUser() {
+export function getCurrentSession() {
   return new Promise((res) => auth.onAuthStateChanged(res));
 }
 

@@ -9,7 +9,7 @@ const drivers = {
 export const {
   logIn,
   logOut,
-  getCurrentUser,
+  getCurrentSession,
   createUser,
   getEvents,
   createEvent,

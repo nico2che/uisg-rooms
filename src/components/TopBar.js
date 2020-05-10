@@ -88,12 +88,12 @@ const useStyles = makeStyles((theme) => ({
 
 function TopBar() {
   const classes = useStyles();
-  const { user } = useSelector((state) => state.user);
+  const { user } = useSelector((state) => state.session);
   const dispatch = useDispatch();
   const [open, setOpen] = React.useState(false);
 
   useEffect(() => {
-    dispatch(actions.user.getCurrentUser());
+    dispatch(actions.session.getCurrentUser());
   }, [dispatch]);
 
   return (
