@@ -18,24 +18,35 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const views = [
+  { id: "timeGridDay", name: "Day" },
+  { id: "timeGridWeek", name: "Week" },
+  { id: "dayGridMonth", name: "Month" },
+];
+
 function ToolBar(props) {
-  const { onNavigate, onView, date, localizer, views } = props;
+  const { calendarRef } = props;
   const classes = useStyles();
+
+  if (!calendarRef || !calendarRef.current) {
+    return "";
+  }
+  const calendar = calendarRef.current.getApi();
   return (
     <AppBar position="relative" color="inherit" elevation={0}>
       <Toolbar>
         <ButtonGroup color="primary">
-          {views.map((name) => (
-            <Button key={name} onClick={() => onView(name)}>
-              {localizer.messages[name]}
+          {views.map((view) => (
+            <Button key={view.id} onClick={() => calendar.changeView(view.id)}>
+              {view.name}
             </Button>
           ))}
         </ButtonGroup>
         <ButtonGroup color="primary" className={classes.arrows}>
-          <Button onClick={() => onNavigate("PREV")}>
+          <Button onClick={() => calendar.prev()}>
             <KeyboardArrowLeft />
           </Button>
-          <Button onClick={() => onNavigate("NEXT")}>
+          <Button onClick={() => calendar.next()}>
             <KeyboardArrowRight />
           </Button>
         </ButtonGroup>
@@ -44,8 +55,8 @@ function ToolBar(props) {
           className={classes.arrows}
           variant="inline"
           disableToolbar
-          value={date}
-          onChange={(date) => onNavigate("DATE", date)}
+          value={new Date()}
+          onChange={(date) => {}}
         />
       </Toolbar>
     </AppBar>

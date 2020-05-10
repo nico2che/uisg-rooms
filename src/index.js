@@ -8,7 +8,7 @@ import { createLogger } from "redux-logger";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
 
-import reducers from "./redux";
+import reducers from "./store";
 
 import App from "./App";
 import "./index.scss";

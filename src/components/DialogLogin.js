@@ -2,7 +2,7 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 
-import { actions } from "../redux";
+import { actions } from "../store";
 import * as api from "../api";
 
 import TextField from "@material-ui/core/TextField";

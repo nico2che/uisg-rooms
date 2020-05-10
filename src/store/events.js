@@ -41,4 +41,17 @@ export default prepareStore(initialState, {
       yield { loading: false, error: error.message };
     }
   },
+
+  async *delete(id) {
+    yield { loading: true, error: undefined };
+    try {
+      await api.deleteEvent(id);
+      yield {
+        loading: false,
+        list: [...this.list.filter((event) => event.id !== id)],
+      };
+    } catch (error) {
+      yield { loading: false, error: error.message };
+    }
+  },
 });

@@ -40,6 +40,10 @@ export function updateEvent(id, event) {
   return dbEvent.doc(id).set(event);
 }
 
+export function deleteEvent(id) {
+  return dbEvent.doc(id).delete();
+}
+
 // Resource
 export function getResources() {
   return dbSpace

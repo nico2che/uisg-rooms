@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Formik, Form } from "formik";
 import { DatePicker, DateTimePicker } from "@material-ui/pickers";
 import { makeStyles } from "@material-ui/core/styles";
@@ -15,10 +15,12 @@ import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import IconButton from "@material-ui/core/IconButton";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 import { actions } from "../store";
 import Checkbox from "@material-ui/core/Checkbox";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -27,8 +29,13 @@ const useStyles = makeStyles((theme) => ({
   title: {
     paddingBottom: 0,
   },
+  titleFlex: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
   content: {
-    paddingTop: "16px !important",
+    paddingTop: "4px !important",
   },
   form: {
     color: theme.palette.text.secondary,
@@ -38,16 +45,24 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(1),
     width: "100%",
   },
+  right: {
+    float: "right",
+  },
 }));
 
 function DialogEvent(props) {
   const { onClose, selected } = props;
-  const { id, startDate, endDate } = selected || {};
+  console.log(selected);
+  const { id, start, end, allDay } = selected || {};
   const classes = useStyles();
   const resources = useSelector((state) => state.resources);
   const events = useSelector((state) => state.events);
   const dispatch = useDispatch();
-  const [allDay, setAllDay] = useState();
+
+  const deleteEvent = () => {
+    dispatch(actions.events.delete(event.id));
+    onClose();
+  };
 
   const saveEvent = async (event) => {
     if (event.id) {
@@ -58,12 +73,6 @@ function DialogEvent(props) {
     onClose();
   };
 
-  const eventAllDay =
-    new Date(startDate).getHours() + new Date(endDate).getHours() === 0;
-  if (allDay !== eventAllDay) {
-    setAllDay(eventAllDay);
-  }
-
   let event;
   if (id) {
     event = events.list.find((event) => event.id === id);
@@ -71,14 +80,24 @@ function DialogEvent(props) {
   if (!event) {
     event = {
       name: "",
-      startDate,
-      endDate,
+      startDate: start,
+      endDate: end,
+      allDay,
     };
   }
 
   return (
     <Dialog open onClose={onClose} fullWidth={true} maxWidth="sm">
-      <DialogTitle className={classes.title}>Create an event</DialogTitle>
+      <DialogTitle className={classes.title}>
+        <span className={classes.titleFlex}>
+          {event.id ? "Edit" : "Create"} an event
+          {event.id && (
+            <IconButton onClick={deleteEvent}>
+              <DeleteIcon />
+            </IconButton>
+          )}
+        </span>
+      </DialogTitle>
       <Formik
         initialValues={event}
         validate={(values) => {
@@ -116,7 +135,7 @@ function DialogEvent(props) {
                   />
                 </Grid>
                 <Grid item xs={4}>
-                  {allDay ? (
+                  {values.allDay ? (
                     <DatePicker
                       autoOk
                       id="startDate"
@@ -151,7 +170,7 @@ function DialogEvent(props) {
                   )}
                 </Grid>
                 <Grid item xs={4}>
-                  {allDay ? (
+                  {values.allDay ? (
                     <DatePicker
                       autoOk
                       id="endDate"
@@ -190,9 +209,9 @@ function DialogEvent(props) {
                     label="All day"
                     control={
                       <Checkbox
-                        value=""
-                        checked={allDay}
-                        onChange={() => setAllDay(!allDay)}
+                        name="allDay"
+                        value={values.allDay}
+                        onChange={handleChange}
                         color="primary"
                       />
                     }

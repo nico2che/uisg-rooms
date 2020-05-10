@@ -13,7 +13,7 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import MenuIcon from "@material-ui/icons/Menu";
 
-import { actions } from "../redux";
+import { actions } from "../store";
 import DialogLogin from "./DialogLogin";
 import Menu from "./Menu";
 

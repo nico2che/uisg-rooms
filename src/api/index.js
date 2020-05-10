@@ -14,6 +14,7 @@ export const {
   getEvents,
   createEvent,
   updateEvent,
+  deleteEvent,
   getResources,
   createResource,
   updateResource,

@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { Calendar, momentLocalizer, Views } from "react-big-calendar";
-import moment from "moment";
+import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import FullCalendar from "@fullcalendar/react";
+import dayGridPlugin from "@fullcalendar/daygrid";
+import timeGridPlugin from "@fullcalendar/timegrid";
+import interactionPlugin from "@fullcalendar/interaction";
 
-import Container from "@material-ui/core/Container";
+import { makeStyles } from "@material-ui/core/styles";
 
 import { actions } from "../store";
 
@@ -11,22 +13,24 @@ import DialogEvent from "../components/DialogEvent";
 import LoadingContainer from "../components/LoadingContainer";
 import ToolBar from "./Calendar/Toolbar";
 
-import { makeStyles } from "@material-ui/core/styles";
-
 const useStyles = makeStyles(() => ({
   container: {
-    maxWidth: "100%",
-    backgroundColor: "white",
-    padding: 0,
     height: "100%",
+  },
+  calendar: {
+    height: "calc(100% - 64px)",
+    backgroundColor: "white",
   },
 }));
 
-const localizer = momentLocalizer(moment);
-
 function eventToCalendar(event) {
-  const { id, name: title, startDate, endDate } = event;
-  return { id, title, start: new Date(startDate), end: new Date(endDate) };
+  const { name: title, startDate, endDate } = event;
+  return {
+    title,
+    start: new Date(startDate),
+    end: new Date(endDate),
+    ...event,
+  };
 }
 
 function CalendarComponent() {
@@ -34,6 +38,7 @@ function CalendarComponent() {
   const events = useSelector((state) => state.events);
   const resources = useSelector((state) => state.resources);
   const dispatch = useDispatch();
+  const calendarRef = useRef(null);
 
   const [selected, setSelected] = useState();
 
@@ -46,35 +51,32 @@ function CalendarComponent() {
     }
   }, [dispatch, events.list, resources.list]);
 
-  const handleSelect = ({ start, end }) => {
-    setSelected({ startDate: start.getTime(), endDate: end.getTime() });
-  };
-  const closeDialog = () => {
-    setSelected();
-  };
-
   if (!events.list || !resources.list) {
     return <LoadingContainer />;
   }
+
   return (
-    <Container className={classes.container}>
-      <Calendar
-        selectable
-        localizer={localizer}
-        events={events.list.map(eventToCalendar)}
-        resources={resources.list}
-        resourceIdAccessor="id"
-        resourceTitleAccessor="name"
-        onSelectSlot={handleSelect}
-        onSelectEvent={(event) => setSelected(event)}
-        defaultView={Views.MONTH}
-        views={["day", "month", "week", "work_week", "agenda"]}
-        step={30}
-        defaultDate={new Date()}
-        components={{ toolbar: ToolBar }}
-      />
-      {!!selected && <DialogEvent onClose={closeDialog} selected={selected} />}
-    </Container>
+    <div className={classes.container}>
+      <ToolBar calendarRef={calendarRef} />
+      <div className={classes.calendar}>
+        <FullCalendar
+          ref={calendarRef}
+          selectable
+          defaultView="dayGridMonth"
+          header={false}
+          editable
+          eventClick={({ event }) => setSelected(event)}
+          select={setSelected}
+          height="parent"
+          plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+          resources={resources.list}
+          events={(events.list || []).map(eventToCalendar)}
+        />
+      </div>
+      {selected && (
+        <DialogEvent onClose={() => setSelected()} selected={selected} />
+      )}
+    </div>
   );
 }
 

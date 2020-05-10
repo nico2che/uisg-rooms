@@ -6,7 +6,7 @@ import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
 
 import MaterialTable from "../components/MaterialTable";
-import { actions } from "../redux";
+import { actions } from "../store";
 
 const useStyles = makeStyles((theme) => ({
   container: {
