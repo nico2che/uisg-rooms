@@ -2,7 +2,7 @@ import React from "react";
 
 import { makeStyles } from "@material-ui/core/styles";
 
-import { Switch, BrowserRouter, Route } from "react-router-dom";
+import { Switch, BrowserRouter, Route, Redirect } from "react-router-dom";
 
 import Calendar from "./containers/Calendar";
 import Settings from "./containers/Settings";
@@ -11,6 +11,7 @@ import CustomFields from "./containers/CustomFields";
 
 import TopBar from "./components/TopBar";
 import "./App.scss";
+import { useSelector } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -24,6 +25,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+function PrivateRoute(props) {
+  const { user } = useSelector((state) => state.session);
+  if (!user) {
+    return <Redirect to="/" />;
+  }
+  return <Route {...props} />;
+}
+
 function App() {
   const classes = useStyles();
   return (
@@ -33,9 +42,10 @@ function App() {
         <main className={classes.content}>
           <Switch>
             <Route exact path="/" component={Calendar} />
-            <Route path="/settings" component={Settings} />
-            <Route path="/resources" component={Resources} />
-            <Route path="/custom-fields" component={CustomFields} />
+            <PrivateRoute path="/settings" component={Settings} />
+            <PrivateRoute path="/resources" component={Resources} />
+            <PrivateRoute path="/custom-fields" component={CustomFields} />
+            <PrivateRoute path="/users" component={CustomFields} />
           </Switch>
         </main>
       </div>
