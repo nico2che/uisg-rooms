@@ -1,17 +1,16 @@
 import React from "react";
-
-import { makeStyles } from "@material-ui/core/styles";
-
+import { useSelector } from "react-redux";
 import { Switch, BrowserRouter, Route, Redirect } from "react-router-dom";
+import { makeStyles } from "@material-ui/core/styles";
 
 import Calendar from "./containers/Calendar";
 import Settings from "./containers/Settings";
 import Resources from "./containers/Resources";
 import CustomFields from "./containers/CustomFields";
+import Users from "./containers/Users";
 
 import TopBar from "./components/TopBar";
 import "./App.scss";
-import { useSelector } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -45,7 +44,7 @@ function App() {
             <PrivateRoute path="/settings" component={Settings} />
             <PrivateRoute path="/resources" component={Resources} />
             <PrivateRoute path="/custom-fields" component={CustomFields} />
-            <PrivateRoute path="/users" component={CustomFields} />
+            <PrivateRoute path="/users" component={Users} />
           </Switch>
         </main>
       </div>
