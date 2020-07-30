@@ -10,6 +10,7 @@ import DashboardIcon from "@material-ui/icons/Dashboard";
 import EventIcon from "@material-ui/icons/Event";
 import ListIcon from "@material-ui/icons/List";
 import SettingsIcon from "@material-ui/icons/Settings";
+import UserIcon from "@material-ui/icons/SupervisorAccount";
 
 const mainListItems = [
   {
@@ -39,6 +40,11 @@ const secondaryListItems = [
     text: "Custom Fields",
     route: "/custom-fields",
     icon: <ListIcon />,
+  },
+  {
+    text: "Users",
+    route: "/users",
+    icon: <UserIcon />,
   },
 ];
 

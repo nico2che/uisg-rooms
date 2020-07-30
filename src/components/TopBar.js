@@ -131,7 +131,7 @@ function TopBar() {
             <div>
               {user.email}
               <IconButton
-                onClick={() => dispatch(actions.user.logOut())}
+                onClick={() => dispatch(actions.session.logOut())}
                 color="inherit"
               >
                 <ExitToAppIcon />
