@@ -67,7 +67,7 @@ function CalendarComponent() {
           editable
           eventClick={({ event }) => setSelected(event)}
           select={setSelected}
-          height="parent"
+          height="100%"
           plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
           resources={resources.list}
           events={(events.list || []).map(eventToCalendar)}
