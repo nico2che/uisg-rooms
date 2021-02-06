@@ -41,4 +41,8 @@ const tableIcons = {
   ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />),
 };
 
-export default (props) => <MaterialTable icons={tableIcons} {...props} />;
+const MaterialTableComponent = (props) => (
+  <MaterialTable icons={tableIcons} {...props} />
+);
+
+export default MaterialTableComponent;

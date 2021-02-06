@@ -63,7 +63,7 @@ function CalendarComponent() {
           ref={calendarRef}
           selectable
           defaultView="dayGridMonth"
-          header={false}
+          headerToolbar={false}
           editable
           eventClick={({ event }) => setSelected(event)}
           select={setSelected}

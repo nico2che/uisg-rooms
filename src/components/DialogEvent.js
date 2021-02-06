@@ -1,6 +1,6 @@
 import React from "react";
 import { Formik, Form } from "formik";
-import { DatePicker, DateTimePicker } from "@material-ui/pickers";
+import { DatePicker, TimePicker } from "@material-ui/pickers";
 import { makeStyles } from "@material-ui/core/styles";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -52,7 +52,6 @@ const useStyles = makeStyles((theme) => ({
 
 function DialogEvent(props) {
   const { onClose, selected } = props;
-  console.log(selected);
   const { id, start, end, allDay } = selected || {};
   const classes = useStyles();
   const resources = useSelector((state) => state.resources);
@@ -73,15 +72,12 @@ function DialogEvent(props) {
     onClose();
   };
 
-  let event;
-  if (id) {
-    event = events.list.find((event) => event.id === id);
-  }
+  let event = id && events.list.find((event) => event.id === id);
   if (!event) {
     event = {
       name: "",
       startDate: start,
-      endDate: end,
+      endDate: allDay ? new Date(end - 1) : end,
       allDay,
     };
   }
@@ -134,83 +130,81 @@ function DialogEvent(props) {
                     autoFocus
                   />
                 </Grid>
-                <Grid item xs={4}>
-                  {values.allDay ? (
-                    <DatePicker
-                      autoOk
-                      id="startDate"
-                      name="startDate"
-                      className={classes.arrows}
-                      variant="inline"
-                      label="Start date"
-                      disableToolbar
-                      value={values.startDate}
-                      onChange={(date) =>
-                        setFieldValue("startDate", date.getTime())
-                      }
-                      onBlur={handleBlur}
-                      fullWidth
-                    />
-                  ) : (
-                    <DateTimePicker
-                      autoOk
-                      id="startDate"
-                      name="startDate"
-                      className={classes.arrows}
-                      variant="inline"
-                      label="Start date"
-                      disableToolbar
-                      value={values.startDate}
-                      onChange={(date) =>
-                        setFieldValue("startDate", date.getTime())
-                      }
-                      onBlur={handleBlur}
-                      fullWidth
-                    />
-                  )}
+                <Grid item xs={values.allDay ? 6 : 3}>
+                  <DatePicker
+                    autoOk
+                    id="startDate"
+                    name="startDate"
+                    className={classes.arrows}
+                    variant="inline"
+                    label="Start date"
+                    disableToolbar
+                    value={values.startDate}
+                    onChange={(date) =>
+                      setFieldValue("startDate", date.getTime())
+                    }
+                    onBlur={handleBlur}
+                    fullWidth
+                  />
                 </Grid>
-                <Grid item xs={4}>
-                  {values.allDay ? (
-                    <DatePicker
+                {!values.allDay && (
+                  <Grid item xs={3}>
+                    <TimePicker
                       autoOk
-                      id="endDate"
-                      name="endDate"
+                      id="startTime"
+                      name="startTime"
+                      label=" "
                       className={classes.arrows}
                       variant="inline"
-                      label="End date"
-                      disableToolbar
-                      value={values.endDate}
-                      onChange={(date) =>
-                        setFieldValue("endDate", date.getTime())
+                      value={values.startDate}
+                      onChange={(time) =>
+                        setFieldValue("startDate", time.getTime())
                       }
                       onBlur={handleBlur}
-                      fullWidth
                     />
-                  ) : (
-                    <DateTimePicker
-                      autoOk
-                      id="endDate"
-                      name="endDate"
-                      className={classes.arrows}
-                      variant="inline"
-                      label="End date"
-                      disableToolbar
-                      value={values.endDate}
-                      onChange={(date) =>
-                        setFieldValue("endDate", date.getTime())
-                      }
-                      onBlur={handleBlur}
-                      fullWidth
-                    />
-                  )}
+                  </Grid>
+                )}
+                <Grid item xs={values.allDay ? 6 : 3}>
+                  <DatePicker
+                    autoOk
+                    id="endDate"
+                    name="endDate"
+                    className={classes.arrows}
+                    variant="inline"
+                    label="End date"
+                    disableToolbar
+                    value={values.endDate}
+                    onChange={(date) =>
+                      setFieldValue("endDate", date.getTime())
+                    }
+                    onBlur={handleBlur}
+                    fullWidth
+                  />
                 </Grid>
-                <Grid item xs={4}>
+                {!values.allDay && (
+                  <Grid item xs={3}>
+                    <TimePicker
+                      autoOk
+                      id="endTime"
+                      name="endTime"
+                      label=" "
+                      className={classes.arrows}
+                      variant="inline"
+                      value={values.endDate}
+                      onChange={(time) =>
+                        setFieldValue("endDate", time.getTime())
+                      }
+                      onBlur={handleBlur}
+                    />
+                  </Grid>
+                )}
+                <Grid item xs={12}>
                   <FormControlLabel
                     label="All day"
                     control={
                       <Checkbox
                         name="allDay"
-                        value={values.allDay}
+                        checked={values.allDay}
                         onChange={handleChange}
                         color="primary"
                       />
