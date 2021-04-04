@@ -2,15 +2,15 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 
-import { actions } from "../store";
-import * as api from "../api";
-
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Link from "@material-ui/core/Link";
 import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
+
+import { actions } from "../store";
+import * as api from "../api";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -66,10 +66,7 @@ export default function DialogLogin() {
   const onSubmit = (e) => {
     // TODO: loading
     if (mode === "signIn") {
-      api
-        .logIn(email, password)
-        .then(({ user }) => dispatch(actions.session.logIn(user)))
-        .catch((e) => setError(e.message));
+      dispatch(actions.session.logIn(email, password));
     } else {
       api.createUser(email, password).catch((e) => setError(e.message));
     }

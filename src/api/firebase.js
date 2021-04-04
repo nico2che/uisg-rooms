@@ -85,17 +85,9 @@ export function createUser(email, password) {
   return auth.createUserWithEmailAndPassword(email, password);
 }
 
-export function getUsers() {
-  return [];
-}
-
-export function updateUser() {
-  // return auth.app.
-}
-
-export function deleteUser() {
-  // return auth.app.
-}
+export const getUsers = getAll("users");
+export const updateUser = update("users");
+export const deleteUser = remove("users");
 
 // Event
 export const getEvents = getAll("events");

@@ -8,6 +8,7 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import MaterialTable from "../components/MaterialTable";
 import { actions } from "../store";
+import Error from "../components/Error";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -28,9 +29,8 @@ function Users() {
   }, [dispatch, users.list]);
 
   const userActions = {
-    onRowAdd: (row) => {
+    onRowAdd: async (row) => {
       dispatch(actions.users.create(row));
-      return Promise.resolve();
     },
     onRowUpdate: (row, { id }) => {
       dispatch(actions.users.update(id, row));
@@ -57,13 +57,25 @@ function Users() {
     },
   };
 
+  const rolesOptions = users.roles?.reduce((roles, role) => {
+    roles[role.id] = role.name;
+    return roles;
+  }, {});
+
   return (
     <Container className={classes.container}>
       <Grid container spacing={3}>
         <Grid item xs={12} sm={12}>
           <MaterialTable
             title="Users"
-            columns={[{ title: "Email", field: "email" }]}
+            columns={[
+              { title: "Email", field: "email" },
+              {
+                title: "Role",
+                field: "role",
+                lookup: rolesOptions,
+              },
+            ]}
             isLoading={users.loading || !users.list}
             data={(users.list || []).sort((a, b) => a.order - b.order)}
             editable={userActions}
@@ -85,6 +97,7 @@ function Users() {
           />
         </Grid>
       </Grid>
+      {users.error && <Error>{users.error}</Error>}
     </Container>
   );
 }

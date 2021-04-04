@@ -19,7 +19,15 @@ export default prepareStore(initialState, {
     }
   },
 
-  logIn: (user) => () => ({ user }),
+  async *logIn(email, password) {
+    yield { loading: true, error: undefined };
+    try {
+      const user = await api.logIn(email, password);
+      yield { loading: false, user };
+    } catch (error) {
+      yield { loading: false, error: error.message };
+    }
+  },
 
   async *logOut() {
     yield { loading: true, error: undefined };
