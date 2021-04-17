@@ -4,6 +4,7 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
+import resourceTimeGridPlugin from "@fullcalendar/resource-timegrid";
 
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -62,15 +63,21 @@ function CalendarComponent() {
         <FullCalendar
           ref={calendarRef}
           selectable
-          defaultView="dayGridMonth"
+          initialView="dayGridMonth"
           headerToolbar={false}
           editable
           eventClick={({ event }) => setSelected(event)}
           select={setSelected}
           height="100%"
-          plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+          plugins={[
+            dayGridPlugin,
+            timeGridPlugin,
+            interactionPlugin,
+            resourceTimeGridPlugin,
+          ]}
           resources={resources.list}
           events={(events.list || []).map(eventToCalendar)}
+          schedulerLicenseKey="CC-Attribution-NonCommercial-NoDerivatives"
         />
       </div>
       {selected && (

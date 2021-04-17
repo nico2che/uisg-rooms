@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import ColorPicker from "material-ui-color-picker";
 
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
