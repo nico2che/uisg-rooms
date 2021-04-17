@@ -12,15 +12,11 @@ import { actions } from "../store";
 
 import DialogEvent from "../components/DialogEvent";
 import LoadingContainer from "../components/LoadingContainer";
-import ToolBar from "./Calendar/Toolbar";
 
 const useStyles = makeStyles(() => ({
   container: {
-    height: "100%",
-  },
-  calendar: {
-    height: "calc(100% - 64px)",
     backgroundColor: "white",
+    height: "100%",
   },
 }));
 
@@ -39,7 +35,6 @@ function CalendarComponent() {
   const events = useSelector((state) => state.events);
   const resources = useSelector((state) => state.resources);
   const dispatch = useDispatch();
-  const calendarRef = useRef(null);
 
   const [selected, setSelected] = useState();
 
@@ -58,28 +53,29 @@ function CalendarComponent() {
 
   return (
     <div className={classes.container}>
-      <ToolBar calendarRef={calendarRef} />
-      <div className={classes.calendar}>
-        <FullCalendar
-          ref={calendarRef}
-          selectable
-          initialView="dayGridMonth"
-          headerToolbar={false}
-          editable
-          eventClick={({ event }) => setSelected(event)}
-          select={setSelected}
-          height="100%"
-          plugins={[
-            dayGridPlugin,
-            timeGridPlugin,
-            interactionPlugin,
-            resourceTimeGridPlugin,
-          ]}
-          resources={resources.list}
-          events={(events.list || []).map(eventToCalendar)}
-          schedulerLicenseKey="CC-Attribution-NonCommercial-NoDerivatives"
-        />
-      </div>
+      <FullCalendar
+        selectable
+        initialView="dayGridMonth"
+        headerToolbar={{
+          left: "prev,next today",
+          center: "title",
+          right: "dayGridMonth,timeGridWeek,timeGridDay",
+        }}
+        editable
+        eventClick={({ event }) => setSelected(event)}
+        select={setSelected}
+        height="100%"
+        plugins={[
+          dayGridPlugin,
+          timeGridPlugin,
+          interactionPlugin,
+          resourceTimeGridPlugin,
+        ]}
+        resources={resources.list}
+        events={(events.list || []).map(eventToCalendar)}
+        schedulerLicenseKey="CC-Attribution-NonCommercial-NoDerivatives"
+      />
+
       {selected && (
         <DialogEvent onClose={() => setSelected()} selected={selected} />
       )}
