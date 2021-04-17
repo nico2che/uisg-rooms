@@ -1,16 +1,19 @@
 import React from "react";
 import { DatePicker } from "@material-ui/pickers";
 import { makeStyles } from "@material-ui/core/styles";
+import { format } from "date-fns";
 
 import AppBar from "@material-ui/core/AppBar";
 import Button from "@material-ui/core/Button";
 import Toolbar from "@material-ui/core/Toolbar";
+import Typography from "@material-ui/core/Typography";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 
 const useStyles = makeStyles((theme) => ({
   arrows: {
+    flexGrow: 1,
     marginLeft: theme.spacing(3),
   },
   noElevation: {
@@ -35,13 +38,9 @@ function ToolBar(props) {
   return (
     <AppBar position="relative" color="inherit" elevation={0}>
       <Toolbar>
-        <ButtonGroup color="primary">
-          {views.map((view) => (
-            <Button key={view.id} onClick={() => calendar.changeView(view.id)}>
-              {view.name}
-            </Button>
-          ))}
-        </ButtonGroup>
+        <Typography variant="h6">
+          {format(calendar.getDate(), "MMMM yyyy")}
+        </Typography>
         <ButtonGroup color="primary" className={classes.arrows}>
           <Button onClick={() => calendar.prev()}>
             <KeyboardArrowLeft />
@@ -50,14 +49,13 @@ function ToolBar(props) {
             <KeyboardArrowRight />
           </Button>
         </ButtonGroup>
-        <DatePicker
-          autoOk
-          className={classes.arrows}
-          variant="inline"
-          disableToolbar
-          value={new Date()}
-          onChange={(date) => {}}
-        />
+        <ButtonGroup color="primary">
+          {views.map((view) => (
+            <Button key={view.id} onClick={() => calendar.changeView(view.id)}>
+              {view.name}
+            </Button>
+          ))}
+        </ButtonGroup>
       </Toolbar>
     </AppBar>
   );
