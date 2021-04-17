@@ -12,7 +12,7 @@ import Users from "./containers/Users";
 import TopBar from "./components/TopBar";
 import "./App.scss";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     display: "flex",
   },
